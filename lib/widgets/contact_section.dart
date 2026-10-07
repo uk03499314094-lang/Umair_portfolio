@@ -15,6 +15,8 @@ class _ContactSectionState extends State<ContactSection> {
   final _emailController = TextEditingController();
   final _messageController = TextEditingController();
 
+  bool _sending = false;
+
   @override
   void dispose() {
     _nameController.dispose();
@@ -23,372 +25,705 @@ class _ContactSectionState extends State<ContactSection> {
     super.dispose();
   }
 
+  Future<void> _sendMessage() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+
+    setState(() {
+      _sending = true;
+    });
+
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    final message = _messageController.text.trim();
+
+    final subject = Uri.encodeComponent(
+      'Portfolio Contact from $name',
+    );
+
+    final body = Uri.encodeComponent(
+      'Name: $name\n'
+      'Email: $email\n\n'
+      'Message:\n$message',
+    );
+
+    final uri = Uri.parse(
+      'mailto:uk03499314094@gmail.com?subject=$subject&body=$body',
+    );
+
+    try {
+      if (await canLaunchUrl(uri)) {
+        await launchUrl(uri);
+
+        _nameController.clear();
+        _emailController.clear();
+        _messageController.clear();
+
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text('Your email app has been opened.'),
+            ),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+              content: Text(
+                'Could not open your email application.',
+              ),
+            ),
+          );
+        }
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _sending = false;
+        });
+      }
+    }
+  }
+
   Future<void> _openUrl(String url) async {
     final uri = Uri.parse(url);
 
     if (await canLaunchUrl(uri)) {
       await launchUrl(
         uri,
-        mode: LaunchMode.externalApplication,
+        webOnlyWindowName: '_blank',
       );
     }
   }
 
-  Future<void> _sendMessage() async {
-    if (!_formKey.currentState!.validate()) {
-      return;
-    }
-
-    final name = _nameController.text.trim();
-    final email = _emailController.text.trim();
-    final message = _messageController.text.trim();
-
-    final emailUri = Uri(
-      scheme: 'mailto',
-      path: 'uk03499314094@gmail.com',
-      queryParameters: {
-        'subject': 'Portfolio Contact from $name',
-        'body': '''
-Hello Umair,
-
-You have received a new message from your portfolio.
-
-Name: $name
-Email: $email
-
-Message:
-$message
-
-Regards,
-$name
-''',
-      },
+  Future<void> _openEmail() async {
+    final uri = Uri.parse(
+      'mailto:uk03499314094@gmail.com',
     );
 
-    if (await canLaunchUrl(emailUri)) {
-      await launchUrl(
-        emailUri,
-        mode: LaunchMode.externalApplication,
-      );
-    } else {
-      if (!mounted) return;
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text(
-            'Could not open your email application.',
-          ),
-        ),
-      );
+    if (await canLaunchUrl(uri)) {
+      await launchUrl(uri);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 800;
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 850;
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 24 : 70,
+        horizontal: isMobile ? 20 : 60,
         vertical: 100,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'CONTACT',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 2,
+          _buildHeading(context),
+
+          const SizedBox(height: 45),
+
+          if (isMobile)
+            Column(
+              children: [
+                _buildIntroCard(context),
+                const SizedBox(height: 20),
+                _buildFormCard(context),
+              ],
+            )
+          else
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 5,
+                  child: _buildIntroCard(context),
+                ),
+                const SizedBox(width: 25),
+                Expanded(
+                  flex: 6,
+                  child: _buildFormCard(context),
+                ),
+              ],
             ),
-          ),
-
-          const SizedBox(height: 12),
-
-          Text(
-            "Let's work together.",
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-          ),
-
-          const SizedBox(height: 15),
-
-          Text(
-            'Have a project or idea in mind? Feel free to get in touch.',
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  height: 1.6,
-                ),
-          ),
-
-          const SizedBox(height: 40),
-
-          isMobile
-              ? _buildMobileLayout(context)
-              : _buildDesktopLayout(context),
         ],
       ),
     );
   }
 
-  Widget _buildDesktopLayout(BuildContext context) {
-    return Row(
+  Widget _buildHeading(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Expanded(
-          child: _buildContactInfo(context),
+        Row(
+          children: [
+            Container(
+              width: 35,
+              height: 2,
+              color: primary,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'GET IN TOUCH',
+              style: TextStyle(
+                color: primary,
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 2,
+              ),
+            ),
+          ],
         ),
 
-        const SizedBox(width: 60),
+        const SizedBox(height: 12),
 
-        Expanded(
-          child: _buildContactForm(context),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMobileLayout(BuildContext context) {
-    return Column(
-      children: [
-        _buildContactInfo(context),
-
-        const SizedBox(height: 40),
-
-        _buildContactForm(context),
-      ],
-    );
-  }
-
-  Widget _buildContactInfo(BuildContext context) {
-    return Column(
-      children: [
-        _ContactItem(
-          icon: Icons.email_outlined,
-          title: 'Email',
-          value: 'uk03499314094@gmail.com',
-          onTap: () {
-            _openUrl(
-              'mailto:uk03499314094@gmail.com',
-            );
-          },
+        Text(
+          "Let's Work Together",
+          style: Theme.of(context)
+              .textTheme
+              .headlineMedium
+              ?.copyWith(
+                fontWeight: FontWeight.w900,
+                letterSpacing: -1,
+              ),
         ),
 
-        const SizedBox(height: 18),
+        const SizedBox(height: 8),
 
-        _ContactItem(
-          icon: Icons.code,
-          title: 'GitHub',
-          value: 'github.com/uk03499314094-lang',
-          onTap: () {
-            _openUrl(
-              'https://github.com/uk03499314094-lang',
-            );
-          },
-        ),
-
-        const SizedBox(height: 18),
-
-        _ContactItem(
-          icon: Icons.business_center_outlined,
-          title: 'LinkedIn',
-          value: 'linkedin.com/in/umair-khan-433605364',
-          onTap: () {
-            _openUrl(
-              'https://www.linkedin.com/in/umair-khan-433605364',
-            );
-          },
-        ),
-
-        const SizedBox(height: 18),
-
-        _ContactItem(
-          icon: Icons.location_on_outlined,
-          title: 'Location',
-          value: 'Mardan, Pakistan',
+        Text(
+          'Have a project, idea or opportunity? Let’s create something great together.',
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     );
   }
 
-  Widget _buildContactForm(BuildContext context) {
-    return Form(
-      key: _formKey,
+  Widget _buildIntroCard(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(30),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0B1118),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFF202B36),
+        ),
+      ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          TextFormField(
-            controller: _nameController,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              labelText: 'Your Name',
-              prefixIcon: const Icon(Icons.person_outline),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
+          Container(
+            width: 60,
+            height: 60,
+            decoration: BoxDecoration(
+              color: primary.withValues(alpha: 0.08),
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(
+                color: primary.withValues(alpha: 0.18),
               ),
             ),
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Please enter your name';
-              }
-
-              return null;
-            },
+            child: Icon(
+              Icons.mail_outline_rounded,
+              color: primary,
+              size: 28,
+            ),
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 28),
 
-          TextFormField(
-            controller: _emailController,
-            keyboardType: TextInputType.emailAddress,
-            textInputAction: TextInputAction.next,
-            decoration: InputDecoration(
-              labelText: 'Your Email',
-              prefixIcon: const Icon(Icons.email_outlined),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-              ),
+          const Text(
+            'Have an idea?',
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 28,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -0.8,
             ),
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Please enter your email';
-              }
-
-              final emailRegex = RegExp(
-                r'^[^@\s]+@[^@\s]+\.[^@\s]+$',
-              );
-
-              if (!emailRegex.hasMatch(value.trim())) {
-                return 'Please enter a valid email';
-              }
-
-              return null;
-            },
           ),
 
-          const SizedBox(height: 18),
+          const SizedBox(height: 8),
 
-          TextFormField(
-            controller: _messageController,
-            maxLines: 5,
-            textInputAction: TextInputAction.newline,
-            decoration: InputDecoration(
-              labelText: 'Your Message',
-              alignLabelWithHint: true,
-              prefixIcon: const Padding(
-                padding: EdgeInsets.only(bottom: 75),
-                child: Icon(Icons.message_outlined),
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(14),
-              ),
-            ),
-            validator: (value) {
-              if (value == null || value.trim().isEmpty) {
-                return 'Please enter your message';
-              }
-
-              if (value.trim().length < 10) {
-                return 'Message should be at least 10 characters';
-              }
-
-              return null;
-            },
+          Text(
+            'I’m always interested in discussing new projects, creative ideas and opportunities.',
+            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                  height: 1.7,
+                ),
           ),
 
-          const SizedBox(height: 20),
+          const SizedBox(height: 30),
 
-          SizedBox(
-            width: double.infinity,
-            child: ElevatedButton.icon(
-              onPressed: _sendMessage,
-              icon: const Icon(Icons.send_outlined),
-              label: const Text('Send Message'),
-            ),
+          _ContactItem(
+            icon: Icons.email_outlined,
+            title: 'EMAIL',
+            value: 'uk03499314094@gmail.com',
+            primary: primary,
+            onTap: _openEmail,
+          ),
+
+          const SizedBox(height: 15),
+
+          _ContactItem(
+            icon: Icons.location_on_outlined,
+            title: 'LOCATION',
+            value: 'Mardan, KPK, Pakistan',
+            primary: primary,
+          ),
+
+          const SizedBox(height: 15),
+
+          _ContactItem(
+            icon: Icons.work_outline_rounded,
+            title: 'AVAILABILITY',
+            value: 'Available for Freelance',
+            primary: primary,
+          ),
+
+          const SizedBox(height: 28),
+
+          Row(
+            children: [
+              _SocialButton(
+                icon: Icons.code_rounded,
+                primary: primary,
+                onTap: () => _openUrl(
+                  'https://github.com/uk03499314094-lang',
+                ),
+              ),
+
+              const SizedBox(width: 10),
+
+              _SocialButton(
+                icon: Icons.business_center_outlined,
+                primary: primary,
+                onTap: () => _openUrl(
+                  'https://www.linkedin.com/in/umair-khan-433605364',
+                ),
+              ),
+            ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildFormCard(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(30),
+      decoration: BoxDecoration(
+        color: const Color(0xFF0B1118),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: const Color(0xFF202B36),
+        ),
+      ),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              'Send Me a Message',
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 23,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+
+            const SizedBox(height: 8),
+
+            Text(
+              'Fill out the form and I’ll get back to you.',
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+
+            const SizedBox(height: 25),
+
+            _buildLabel('YOUR NAME'),
+
+            const SizedBox(height: 8),
+
+            _buildTextField(
+              controller: _nameController,
+              hint: 'Enter your name',
+              icon: Icons.person_outline,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your name';
+                }
+
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 18),
+
+            _buildLabel('EMAIL ADDRESS'),
+
+            const SizedBox(height: 8),
+
+            _buildTextField(
+              controller: _emailController,
+              hint: 'Enter your email',
+              icon: Icons.email_outlined,
+              keyboardType: TextInputType.emailAddress,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your email';
+                }
+
+                if (!value.contains('@') ||
+                    !value.contains('.')) {
+                  return 'Enter a valid email';
+                }
+
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 18),
+
+            _buildLabel('MESSAGE'),
+
+            const SizedBox(height: 8),
+
+            _buildTextField(
+              controller: _messageController,
+              hint: 'Tell me about your project...',
+              icon: Icons.chat_bubble_outline,
+              maxLines: 5,
+              validator: (value) {
+                if (value == null || value.trim().isEmpty) {
+                  return 'Please enter your message';
+                }
+
+                if (value.trim().length < 10) {
+                  return 'Message should be at least 10 characters';
+                }
+
+                return null;
+              },
+            ),
+
+            const SizedBox(height: 25),
+
+            SizedBox(
+              width: double.infinity,
+              height: 52,
+              child: ElevatedButton(
+                onPressed: _sending ? null : _sendMessage,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: primary,
+                  foregroundColor: Colors.black,
+                  disabledBackgroundColor:
+                      primary.withValues(alpha: 0.5),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+                child: _sending
+                    ? const SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          strokeWidth: 2,
+                          color: Colors.black,
+                        ),
+                      )
+                    : const Row(
+                        mainAxisAlignment:
+                            MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            'SEND MESSAGE',
+                            style: TextStyle(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: 1,
+                            ),
+                          ),
+                          SizedBox(width: 10),
+                          Icon(
+                            Icons.arrow_forward_rounded,
+                            size: 17,
+                          ),
+                        ],
+                      ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLabel(String text) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return Text(
+      text,
+      style: TextStyle(
+        color: primary,
+        fontSize: 9,
+        fontWeight: FontWeight.w900,
+        letterSpacing: 1.3,
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String hint,
+    required IconData icon,
+    required String? Function(String?) validator,
+    TextInputType? keyboardType,
+    int maxLines = 1,
+  }) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return TextFormField(
+      controller: controller,
+      validator: validator,
+      keyboardType: keyboardType,
+      maxLines: maxLines,
+      style: const TextStyle(
+        color: Colors.white,
+        fontSize: 14,
+      ),
+      decoration: InputDecoration(
+        hintText: hint,
+        hintStyle: const TextStyle(
+          color: Color(0xFF66717D),
+          fontSize: 13,
+        ),
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(
+            bottom: maxLines > 1 ? 70 : 0,
+          ),
+          child: Icon(
+            icon,
+            color: primary.withValues(alpha: 0.65),
+            size: 19,
+          ),
+        ),
+        filled: true,
+        fillColor: const Color(0xFF070B10),
+        contentPadding: const EdgeInsets.symmetric(
+          horizontal: 15,
+          vertical: 15,
+        ),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Color(0xFF202B36),
+          ),
+        ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Color(0xFF202B36),
+          ),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: BorderSide(
+            color: primary,
+            width: 1.2,
+          ),
+        ),
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Colors.redAccent,
+          ),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(10),
+          borderSide: const BorderSide(
+            color: Colors.redAccent,
+          ),
+        ),
       ),
     );
   }
 }
 
-class _ContactItem extends StatelessWidget {
+class _ContactItem extends StatefulWidget {
   final IconData icon;
   final String title;
   final String value;
+  final Color primary;
   final VoidCallback? onTap;
 
   const _ContactItem({
     required this.icon,
     required this.title,
     required this.value,
+    required this.primary,
     this.onTap,
   });
 
   @override
-  Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+  State<_ContactItem> createState() => _ContactItemState();
+}
 
-    return InkWell(
-      onTap: onTap,
-      borderRadius: BorderRadius.circular(18),
-      child: Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainer,
-          borderRadius: BorderRadius.circular(18),
-          border: Border.all(
-            color: Theme.of(context).colorScheme.outlineVariant,
+class _ContactItemState extends State<_ContactItem> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: widget.onTap != null
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
+      onEnter: (_) {
+        setState(() {
+          _hovered = true;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          _hovered = false;
+        });
+      },
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.all(13),
+          decoration: BoxDecoration(
+            color: _hovered
+                ? widget.primary.withValues(alpha: 0.06)
+                : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: _hovered
+                  ? widget.primary.withValues(alpha: 0.18)
+                  : const Color(0xFF202B36),
+            ),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: widget.primary.withValues(alpha: 0.08),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(
+                  widget.icon,
+                  color: widget.primary,
+                  size: 19,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment:
+                      CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.title,
+                      style: TextStyle(
+                        color: widget.primary,
+                        fontSize: 8,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1.2,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      widget.value,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              if (widget.onTap != null)
+                Icon(
+                  Icons.arrow_outward_rounded,
+                  color: widget.primary.withValues(
+                    alpha: _hovered ? 1 : 0.45,
+                  ),
+                  size: 16,
+                ),
+            ],
           ),
         ),
-        child: Row(
-          children: [
-            Container(
-              width: 48,
-              height: 48,
-              decoration: BoxDecoration(
-                color: primary.withValues(alpha: 0.12),
-                borderRadius: BorderRadius.circular(14),
-              ),
-              child: Icon(
-                icon,
-                color: primary,
+      ),
+    );
+  }
+}
+
+class _SocialButton extends StatefulWidget {
+  final IconData icon;
+  final Color primary;
+  final VoidCallback onTap;
+
+  const _SocialButton({
+    required this.icon,
+    required this.primary,
+    required this.onTap,
+  });
+
+  @override
+  State<_SocialButton> createState() => _SocialButtonState();
+}
+
+class _SocialButtonState extends State<_SocialButton> {
+  bool _hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) {
+        setState(() {
+          _hovered = true;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          _hovered = false;
+        });
+      },
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          width: 45,
+          height: 45,
+          decoration: BoxDecoration(
+            color: _hovered
+                ? widget.primary.withValues(alpha: 0.15)
+                : widget.primary.withValues(alpha: 0.06),
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+              color: widget.primary.withValues(
+                alpha: _hovered ? 0.4 : 0.15,
               ),
             ),
-
-            const SizedBox(width: 15),
-
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-
-                  const SizedBox(height: 5),
-
-                  Text(
-                    value,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ],
-              ),
-            ),
-
-            if (onTap != null)
-              const Icon(
-                Icons.arrow_outward,
-                size: 18,
-              ),
-          ],
+          ),
+          child: Icon(
+            widget.icon,
+            color: widget.primary,
+            size: 20,
+          ),
         ),
       ),
     );

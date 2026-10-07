@@ -1,7 +1,9 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class HeroSection extends StatelessWidget {
+class HeroSection extends StatefulWidget {
   final VoidCallback onProjectsTap;
   final VoidCallback onContactTap;
 
@@ -10,6 +12,30 @@ class HeroSection extends StatelessWidget {
     required this.onProjectsTap,
     required this.onContactTap,
   });
+
+  @override
+  State<HeroSection> createState() => _HeroSectionState();
+}
+
+class _HeroSectionState extends State<HeroSection>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 8),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   Future<void> _openUrl(String url) async {
     final uri = Uri.parse(url);
@@ -24,123 +50,246 @@ class HeroSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 800;
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 850;
 
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 24 : 70,
-        vertical: isMobile ? 50 : 80,
+    return Container(
+      width: double.infinity,
+      constraints: BoxConstraints(
+        minHeight: isMobile ? 850 : 650,
       ),
-      child: isMobile
-          ? _buildMobileLayout(context)
-          : _buildDesktopLayout(context),
+      child: Stack(
+        children: [
+          // Animated background
+          Positioned.fill(
+            child: AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                final value = _controller.value;
+
+                return CustomPaint(
+                  painter: _HeroBackgroundPainter(
+                    progress: value,
+                    primary: Theme.of(context).colorScheme.primary,
+                  ),
+                );
+              },
+            ),
+          ),
+
+          Padding(
+            padding: EdgeInsets.fromLTRB(
+              isMobile ? 24 : 60,
+              isMobile ? 55 : 65,
+              isMobile ? 24 : 60,
+              70,
+            ),
+            child: isMobile
+                ? _buildMobile(context)
+                : _buildDesktop(context),
+          ),
+        ],
+      ),
     );
   }
 
-  Widget _buildDesktopLayout(BuildContext context) {
+  Widget _buildDesktop(BuildContext context) {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          flex: 6,
+          flex: 55,
           child: _buildContent(context),
         ),
-        const SizedBox(width: 60),
+        const SizedBox(width: 35),
         Expanded(
-          flex: 4,
+          flex: 45,
           child: _buildVisual(context),
         ),
       ],
     );
   }
 
-  Widget _buildMobileLayout(BuildContext context) {
+  Widget _buildMobile(BuildContext context) {
     return Column(
       children: [
         _buildVisual(context),
-        const SizedBox(height: 50),
+        const SizedBox(height: 55),
         _buildContent(context),
       ],
     );
   }
 
   Widget _buildContent(BuildContext context) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          "HELLO, I'M UMAIR 👋",
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-            fontSize: 16,
-            fontWeight: FontWeight.w700,
-            letterSpacing: 2,
-          ),
-        ),
-
-        const SizedBox(height: 20),
-
-        Text(
-          'Full-Stack Developer\n& Flutter Developer',
-          style: Theme.of(context).textTheme.displayMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                height: 1.1,
-              ),
-        ),
-
-        const SizedBox(height: 24),
-
-        Text(
-          'I build modern, responsive web and mobile applications '
-          'with clean code, thoughtful design, and scalable architecture.',
-          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                height: 1.6,
-              ),
-        ),
-
-        const SizedBox(height: 35),
-
-        // Main Buttons
-        Wrap(
-          spacing: 15,
-          runSpacing: 15,
+        // Small intro
+        Row(
           children: [
-            ElevatedButton.icon(
-              onPressed: onProjectsTap,
-              icon: const Icon(Icons.arrow_forward),
-              label: const Text('View Projects'),
+            Container(
+              width: 32,
+              height: 2,
+              color: primary,
             ),
-            OutlinedButton.icon(
-              onPressed: onContactTap,
-              icon: const Icon(Icons.mail_outline),
-              label: const Text('Contact Me'),
+            const SizedBox(width: 10),
+            Text(
+              "HELLO, I'M",
+              style: TextStyle(
+                color: primary,
+                fontSize: 12,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 2,
+              ),
             ),
           ],
         ),
 
-        const SizedBox(height: 35),
+        const SizedBox(height: 16),
 
-        // Social Buttons
+        // Main name
+        RichText(
+          text: TextSpan(
+            style: theme.textTheme.displayLarge?.copyWith(
+              fontSize: MediaQuery.of(context).size.width < 1100
+                  ? 52
+                  : 66,
+              height: 0.98,
+              letterSpacing: -2.5,
+              fontWeight: FontWeight.w900,
+            ),
+            children: [
+              const TextSpan(
+                text: 'Umair ',
+              ),
+              TextSpan(
+                text: 'Khan',
+                style: TextStyle(
+                  color: primary,
+                ),
+              ),
+            ],
+          ),
+        ),
+
+        const SizedBox(height: 15),
+
+        // Role
+        Text(
+          'Full-Stack Developer | Flutter Developer | AI & Automation',
+          style: theme.textTheme.titleLarge?.copyWith(
+            color: Colors.white,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+
+        const SizedBox(height: 18),
+
+        // Description
+        ConstrainedBox(
+          constraints: const BoxConstraints(
+            maxWidth: 620,
+          ),
+          child: Text(
+            'I build modern web, mobile and AI-powered digital '
+            'experiences with clean code, scalable solutions '
+            'and creative ideas.',
+            style: theme.textTheme.bodyLarge?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.65,
+            ),
+          ),
+        ),
+
+        const SizedBox(height: 28),
+
+        // Buttons
+        Wrap(
+          spacing: 12,
+          runSpacing: 12,
+          children: [
+            ElevatedButton.icon(
+              onPressed: widget.onContactTap,
+              icon: const Icon(
+                Icons.arrow_forward_rounded,
+                size: 17,
+              ),
+              label: const Text('HIRE ME'),
+            ),
+            OutlinedButton.icon(
+              onPressed: widget.onProjectsTap,
+              icon: const Icon(
+                Icons.work_outline_rounded,
+                size: 17,
+              ),
+              label: const Text('VIEW MY WORK'),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 24),
+
+        // Availability
         Row(
           children: [
-            _SocialButton(
-              icon: Icons.code,
-              label: 'GitHub',
-              onPressed: () {
+            Container(
+              width: 8,
+              height: 8,
+              decoration: BoxDecoration(
+                color: Colors.greenAccent,
+                shape: BoxShape.circle,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.greenAccent.withValues(alpha: 0.5),
+                    blurRadius: 8,
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(width: 8),
+            const Text(
+              'AVAILABLE FOR FREELANCE',
+              style: TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.w700,
+                letterSpacing: 1,
+                color: Colors.white70,
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 22),
+
+        // Socials
+        Row(
+          children: [
+            _SocialIcon(
+              icon: Icons.code_rounded,
+              onTap: () {
                 _openUrl(
                   'https://github.com/uk03499314094-lang',
                 );
               },
             ),
-
-            const SizedBox(width: 20),
-
-            _SocialButton(
+            const SizedBox(width: 10),
+            _SocialIcon(
               icon: Icons.business_center_outlined,
-              label: 'LinkedIn',
-              onPressed: () {
+              onTap: () {
                 _openUrl(
                   'https://www.linkedin.com/in/umair-khan-433605364',
+                );
+              },
+            ),
+            const SizedBox(width: 10),
+            _SocialIcon(
+              icon: Icons.email_outlined,
+              onTap: () {
+                _openUrl(
+                  'mailto:uk03499314094@gmail.com',
                 );
               },
             ),
@@ -152,56 +301,395 @@ class HeroSection extends StatelessWidget {
 
   Widget _buildVisual(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 850;
 
-    return Container(
-      height: 400,
-      width: double.infinity,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(30),
-        border: Border.all(
-          color: primary.withValues(alpha: 0.2),
-          width: 2,
-        ),
-        boxShadow: [
-          BoxShadow(
-            color: primary.withValues(alpha: 0.12),
-            blurRadius: 30,
-            spreadRadius: 5,
+    final imageSize = isMobile ? 310.0 : 430.0;
+
+    return SizedBox(
+      height: isMobile ? 430 : 560,
+      child: Stack(
+        alignment: Alignment.center,
+        clipBehavior: Clip.none,
+        children: [
+          // Rotating ring
+          AnimatedBuilder(
+            animation: _controller,
+            builder: (context, child) {
+              return Transform.rotate(
+                angle: _controller.value * math.pi * 2,
+                child: Container(
+                  width: imageSize + 55,
+                  height: imageSize + 55,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: primary.withValues(alpha: 0.18),
+                      width: 1.5,
+                    ),
+                  ),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 0,
+                        left: imageSize / 2 + 20,
+                        child: Container(
+                          width: 8,
+                          height: 8,
+                          decoration: BoxDecoration(
+                            color: primary,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: primary.withValues(alpha: 0.7),
+                                blurRadius: 14,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            },
+          ),
+
+          // Outer glow
+          Container(
+            width: imageSize + 25,
+            height: imageSize + 25,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: primary.withValues(alpha: 0.16),
+                  blurRadius: 70,
+                  spreadRadius: 15,
+                ),
+              ],
+            ),
+          ),
+
+          // Profile image
+          Container(
+            width: imageSize,
+            height: imageSize,
+            padding: const EdgeInsets.all(3),
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              gradient: SweepGradient(
+                colors: [
+                  primary,
+                  primary.withValues(alpha: 0.15),
+                  primary,
+                ],
+              ),
+            ),
+            child: Container(
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFF070B10),
+              ),
+              child: ClipOval(
+                child: Image.asset(
+                  'assets/images/profile.jpg',
+                  fit: BoxFit.cover,
+                  alignment: Alignment.topCenter,
+                ),
+              ),
+            ),
+          ),
+
+          // Flutter badge
+          Positioned(
+            top: isMobile ? 25 : 55,
+            left: isMobile ? 0 : -15,
+            child: _TechBadge(
+              icon: Icons.flutter_dash,
+              title: 'Flutter',
+              primary: primary,
+            ),
+          ),
+
+          // React badge
+          Positioned(
+            top: isMobile ? 65 : 80,
+            right: isMobile ? 0 : -5,
+            child: _TechBadge(
+              icon: Icons.web_outlined,
+              title: 'React.js',
+              primary: primary,
+            ),
+          ),
+
+          // Python badge
+          Positioned(
+            bottom: isMobile ? 60 : 90,
+            left: isMobile ? 5 : -10,
+            child: _TechBadge(
+              icon: Icons.code_rounded,
+              title: 'Python',
+              primary: primary,
+            ),
+          ),
+
+          // MongoDB badge
+          Positioned(
+            bottom: isMobile ? 30 : 55,
+            right: isMobile ? 0 : -10,
+            child: _TechBadge(
+              icon: Icons.storage_outlined,
+              title: 'MongoDB',
+              primary: primary,
+            ),
+          ),
+
+          // Decorative dots
+          Positioned(
+            top: 30,
+            right: isMobile ? 25 : 45,
+            child: _Dot(color: primary),
+          ),
+          Positioned(
+            bottom: 25,
+            left: isMobile ? 30 : 55,
+            child: _Dot(color: primary),
           ),
         ],
       ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(28),
-        child: Image.asset(
-          'assets/images/profile.jpg',
-          fit: BoxFit.cover,
-          alignment: Alignment.topCenter,
+    );
+  }
+}
+
+class _TechBadge extends StatefulWidget {
+  final IconData icon;
+  final String title;
+  final Color primary;
+
+  const _TechBadge({
+    required this.icon,
+    required this.title,
+    required this.primary,
+  });
+
+  @override
+  State<_TechBadge> createState() => _TechBadgeState();
+}
+
+class _TechBadgeState extends State<_TechBadge>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 3),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        final offset =
+            math.sin(_controller.value * math.pi) * 5;
+
+        return Transform.translate(
+          offset: Offset(0, -offset),
+          child: Container(
+            padding: const EdgeInsets.symmetric(
+              horizontal: 12,
+              vertical: 9,
+            ),
+            decoration: BoxDecoration(
+              color: const Color(0xFF111821).withValues(alpha: 0.94),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                color: widget.primary.withValues(alpha: 0.20),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: widget.primary.withValues(alpha: 0.08),
+                  blurRadius: 18,
+                ),
+              ],
+            ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(
+                  widget.icon,
+                  size: 17,
+                  color: widget.primary,
+                ),
+                const SizedBox(width: 7),
+                Text(
+                  widget.title,
+                  style: const TextStyle(
+                    fontSize: 11,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _SocialIcon extends StatefulWidget {
+  final IconData icon;
+  final VoidCallback onTap;
+
+  const _SocialIcon({
+    required this.icon,
+    required this.onTap,
+  });
+
+  @override
+  State<_SocialIcon> createState() => _SocialIconState();
+}
+
+class _SocialIconState extends State<_SocialIcon> {
+  bool hovered = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+      onEnter: (_) => setState(() => hovered = true),
+      onExit: (_) => setState(() => hovered = false),
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 180),
+          width: 38,
+          height: 38,
+          decoration: BoxDecoration(
+            color: hovered
+                ? primary.withValues(alpha: 0.12)
+                : const Color(0xFF111821),
+            borderRadius: BorderRadius.circular(9),
+            border: Border.all(
+              color: hovered
+                  ? primary.withValues(alpha: 0.45)
+                  : const Color(0xFF26313D),
+            ),
+          ),
+          child: Icon(
+            widget.icon,
+            size: 17,
+            color: hovered ? primary : Colors.white70,
+          ),
         ),
       ),
     );
   }
 }
 
-class _SocialButton extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final VoidCallback onPressed;
+class _Dot extends StatelessWidget {
+  final Color color;
 
-  const _SocialButton({
-    required this.icon,
-    required this.label,
-    required this.onPressed,
+  const _Dot({
+    required this.color,
   });
 
   @override
   Widget build(BuildContext context) {
-    return TextButton.icon(
-      onPressed: onPressed,
-      icon: Icon(
-        icon,
-        size: 20,
+    return Container(
+      width: 6,
+      height: 6,
+      decoration: BoxDecoration(
+        color: color,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: color.withValues(alpha: 0.7),
+            blurRadius: 12,
+          ),
+        ],
       ),
-      label: Text(label),
     );
+  }
+}
+
+class _HeroBackgroundPainter extends CustomPainter {
+  final double progress;
+  final Color primary;
+
+  _HeroBackgroundPainter({
+    required this.progress,
+    required this.primary,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.6;
+
+    final center = Offset(
+      size.width * 0.75,
+      size.height * 0.50,
+    );
+
+    for (int i = 0; i < 5; i++) {
+      final radius = 130.0 + (i * 65);
+
+      paint.color = primary.withValues(
+        alpha: 0.035,
+      );
+
+      canvas.drawCircle(
+        center,
+        radius,
+        paint,
+      );
+    }
+
+    // Small moving particles
+    final particlePaint = Paint()
+      ..style = PaintingStyle.fill;
+
+    for (int i = 0; i < 18; i++) {
+      final angle =
+          (i / 18) * math.pi * 2 + progress * math.pi * 2;
+
+      final radius = 180.0 + (i % 3) * 55;
+
+      final x = center.dx + math.cos(angle) * radius;
+      final y = center.dy + math.sin(angle) * radius;
+
+      particlePaint.color = primary.withValues(
+        alpha: 0.12,
+      );
+
+      canvas.drawCircle(
+        Offset(x, y),
+        i % 3 == 0 ? 2 : 1,
+        particlePaint,
+      );
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant _HeroBackgroundPainter oldDelegate) {
+    return oldDelegate.progress != progress;
   }
 }

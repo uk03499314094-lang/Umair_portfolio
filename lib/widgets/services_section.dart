@@ -6,149 +6,470 @@ class ServicesSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 800;
+    final isMobile = width < 850;
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 24 : 70,
+        horizontal: isMobile ? 20 : 60,
         vertical: 90,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            'MY SERVICES',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 2,
-            ),
-          ),
-          const SizedBox(height: 12),
-          Text(
-            'What I can build for you.',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
-                ),
-          ),
+          _buildHeading(context),
+
           const SizedBox(height: 45),
 
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: isMobile ? 1 : 3,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
-            childAspectRatio: isMobile ? 2.0 : 1.05,
-            children: const [
-              _ServiceCard(
-                icon: Icons.web_outlined,
-                title: 'Web Development',
-                description:
-                    'Responsive and modern websites using HTML, CSS, JavaScript, React.js and modern UI technologies.',
-              ),
-              _ServiceCard(
-                icon: Icons.phone_android_outlined,
-                title: 'Flutter Development',
-                description:
-                    'Cross-platform mobile and web applications using Flutter and Dart.',
-              ),
-              _ServiceCard(
-                icon: Icons.dns_outlined,
-                title: 'Backend & APIs',
-                description:
-                    'Backend applications, REST APIs, authentication and database integration using Node.js and Express.js.',
-              ),
-              _ServiceCard(
-                icon: Icons.storage_outlined,
-                title: 'Database Solutions',
-                description:
-                    'Database integration and data management using MongoDB and MySQL.',
-              ),
-              _ServiceCard(
-                icon: Icons.auto_awesome_outlined,
-                title: 'AI & Automation',
-                description:
-                    'AI-powered applications and automation workflows using Python and modern AI technologies.',
-              ),
-              _ServiceCard(
-                icon: Icons.integration_instructions_outlined,
-                title: 'API Integration',
-                description:
-                    'Third-party API integration, JSON data handling and connecting different services.',
-              ),
-            ],
-          ),
+          if (isMobile)
+            Column(
+              children: [
+                _ServiceCard(
+                  number: '01',
+                  icon: Icons.web_outlined,
+                  title: 'Web Development',
+                  description:
+                      'Modern, responsive websites and web applications built with clean architecture and excellent user experience.',
+                  technologies: 'React • JavaScript • Tailwind',
+                  featured: true,
+                ),
+
+                const SizedBox(height: 16),
+
+                _ServiceCard(
+                  number: '02',
+                  icon: Icons.phone_android_outlined,
+                  title: 'Flutter Development',
+                  description:
+                      'Cross-platform mobile and web applications using Flutter and Dart with modern Material 3 interfaces.',
+                  technologies: 'Flutter • Dart • Material 3',
+                ),
+
+                const SizedBox(height: 16),
+
+                _ServiceCard(
+                  number: '03',
+                  icon: Icons.auto_awesome_outlined,
+                  title: 'AI & Automation',
+                  description:
+                      'AI-powered applications and automation workflows that connect tools, APIs and business processes.',
+                  technologies: 'Python • AI • n8n',
+                ),
+
+                const SizedBox(height: 16),
+
+                _ServiceCard(
+                  number: '04',
+                  icon: Icons.dns_outlined,
+                  title: 'Backend & APIs',
+                  description:
+                      'Scalable backend systems, REST APIs, authentication and database integration for modern applications.',
+                  technologies: 'Node.js • Express • REST',
+                ),
+
+                const SizedBox(height: 16),
+
+                _ServiceCard(
+                  number: '05',
+                  icon: Icons.storage_outlined,
+                  title: 'Database Solutions',
+                  description:
+                      'Reliable data management and database integration for secure and scalable digital applications.',
+                  technologies: 'MongoDB • MySQL',
+                ),
+              ],
+            )
+          else
+            Column(
+              children: [
+                // FIRST ROW
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: _ServiceCard(
+                        number: '01',
+                        icon: Icons.web_outlined,
+                        title: 'Web Development',
+                        description:
+                            'Modern, responsive websites and web applications built with clean architecture and excellent user experience.',
+                        technologies: 'React • JavaScript • Tailwind',
+                        featured: true,
+                      ),
+                    ),
+
+                    const SizedBox(width: 20),
+
+                    Expanded(
+                      flex: 2,
+                      child: _ServiceCard(
+                        number: '02',
+                        icon: Icons.phone_android_outlined,
+                        title: 'Flutter Development',
+                        description:
+                            'Cross-platform applications using Flutter and Dart with beautiful responsive interfaces.',
+                        technologies: 'Flutter • Dart • Material 3',
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                // SECOND ROW
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: _ServiceCard(
+                        number: '03',
+                        icon: Icons.auto_awesome_outlined,
+                        title: 'AI & Automation',
+                        description:
+                            'AI-powered applications and automation workflows connecting tools, APIs and business processes.',
+                        technologies: 'Python • AI • n8n',
+                      ),
+                    ),
+
+                    const SizedBox(width: 20),
+
+                    Expanded(
+                      child: _ServiceCard(
+                        number: '04',
+                        icon: Icons.dns_outlined,
+                        title: 'Backend & APIs',
+                        description:
+                            'Scalable backend systems, REST APIs, authentication and database integration.',
+                        technologies: 'Node.js • Express • REST',
+                      ),
+                    ),
+
+                    const SizedBox(width: 20),
+
+                    Expanded(
+                      child: _ServiceCard(
+                        number: '05',
+                        icon: Icons.storage_outlined,
+                        title: 'Database Solutions',
+                        description:
+                            'Reliable data management and database integration for modern applications.',
+                        technologies: 'MongoDB • MySQL',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
         ],
       ),
     );
   }
+
+  Widget _buildHeading(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 35,
+              height: 2,
+              color: primary,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'WHAT I DO',
+              style: TextStyle(
+                color: primary,
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 2,
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        Text(
+          'Services I Provide',
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.8,
+              ),
+        ),
+
+        const SizedBox(height: 8),
+
+        Text(
+          'Digital solutions designed to turn ideas into useful products.',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
+    );
+  }
 }
 
-class _ServiceCard extends StatelessWidget {
+class _ServiceCard extends StatefulWidget {
+  final String number;
   final IconData icon;
   final String title;
   final String description;
+  final String technologies;
+  final bool featured;
 
   const _ServiceCard({
+    required this.number,
     required this.icon,
     required this.title,
     required this.description,
+    required this.technologies,
+    this.featured = false,
   });
 
   @override
+  State<_ServiceCard> createState() => _ServiceCardState();
+}
+
+class _ServiceCardState extends State<_ServiceCard> {
+  bool _hovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
 
-    return Container(
-      padding: const EdgeInsets.all(25),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(22),
-        border: Border.all(
-          color: Theme.of(context).colorScheme.outlineVariant,
-        ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 56,
-            height: 56,
-            decoration: BoxDecoration(
-              color: primary.withValues(alpha: 0.10),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Icon(
-              icon,
-              color: primary,
-              size: 28,
-            ),
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+
+      onEnter: (_) {
+        setState(() {
+          _hovered = true;
+        });
+      },
+
+      onExit: (_) {
+        setState(() {
+          _hovered = false;
+        });
+      },
+
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+
+        width: double.infinity,
+
+        transform: Matrix4.identity()
+          ..translate(
+            0.0,
+            _hovered ? -6.0 : 0.0,
           ),
 
-          const SizedBox(height: 22),
+        padding: const EdgeInsets.all(26),
 
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.w800,
-            ),
+        decoration: BoxDecoration(
+          color: const Color(0xFF0B1118),
+
+          borderRadius: BorderRadius.circular(18),
+
+          border: Border.all(
+            color: _hovered
+                ? primary.withValues(alpha: 0.55)
+                : const Color(0xFF202B36),
+            width: 1,
           ),
 
-          const SizedBox(height: 12),
-
-          Expanded(
-            child: Text(
-              description,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    height: 1.6,
+          boxShadow: _hovered
+              ? [
+                  BoxShadow(
+                    color: primary.withValues(alpha: 0.12),
+                    blurRadius: 35,
+                    spreadRadius: 1,
                   ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.12),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+        ),
+
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // TOP
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 250),
+
+                  width: 52,
+                  height: 52,
+
+                  decoration: BoxDecoration(
+                    color: _hovered
+                        ? primary.withValues(alpha: 0.16)
+                        : primary.withValues(alpha: 0.08),
+
+                    borderRadius: BorderRadius.circular(13),
+
+                    border: Border.all(
+                      color: primary.withValues(
+                        alpha: _hovered ? 0.35 : 0.15,
+                      ),
+                    ),
+                  ),
+
+                  child: AnimatedScale(
+                    duration: const Duration(milliseconds: 250),
+                    scale: _hovered ? 1.12 : 1.0,
+                    child: Icon(
+                      widget.icon,
+                      color: primary,
+                      size: 24,
+                    ),
+                  ),
+                ),
+
+                Text(
+                  widget.number,
+                  style: TextStyle(
+                    color: primary.withValues(
+                      alpha: _hovered ? 0.75 : 0.40,
+                    ),
+                    fontSize: 25,
+                    fontWeight: FontWeight.w900,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
+
+            const SizedBox(height: 34),
+
+            // TITLE
+            Text(
+              widget.title,
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 20,
+                fontWeight: FontWeight.w900,
+                letterSpacing: -0.3,
+              ),
+            ),
+
+            const SizedBox(height: 11),
+
+            // DESCRIPTION
+            Text(
+              widget.description,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: const Color(0xFF9AA6B2),
+                height: 1.65,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // TECHNOLOGIES
+            Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 10,
+                vertical: 7,
+              ),
+
+              decoration: BoxDecoration(
+                color: primary.withValues(alpha: 0.05),
+                borderRadius: BorderRadius.circular(7),
+                border: Border.all(
+                  color: primary.withValues(alpha: 0.10),
+                ),
+              ),
+
+              child: Text(
+                widget.technologies,
+                style: TextStyle(
+                  color: primary,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 0.4,
+                ),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+
+            // BOTTOM LINE
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                AnimatedOpacity(
+                  duration: const Duration(milliseconds: 200),
+                  opacity: _hovered ? 1 : 0.55,
+
+                  child: Row(
+                    children: [
+                      Text(
+                        'EXPLORE',
+                        style: TextStyle(
+                          color: primary,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.2,
+                        ),
+                      ),
+
+                      const SizedBox(width: 8),
+
+                      AnimatedContainer(
+                        duration: const Duration(milliseconds: 250),
+
+                        transform: Matrix4.identity()
+                          ..translate(
+                            _hovered ? 5.0 : 0.0,
+                            0.0,
+                          ),
+
+                        child: Icon(
+                          Icons.arrow_forward_rounded,
+                          size: 16,
+                          color: primary,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                if (widget.featured)
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 9,
+                      vertical: 5,
+                    ),
+                    decoration: BoxDecoration(
+                      color: primary.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Text(
+                      'FEATURED',
+                      style: TextStyle(
+                        color: primary,
+                        fontSize: 8,
+                        fontWeight: FontWeight.w900,
+                        letterSpacing: 1,
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

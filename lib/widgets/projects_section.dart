@@ -4,113 +4,611 @@ import 'package:url_launcher/url_launcher.dart';
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
 
-  Future<void> _openUrl(String url) async {
-    final uri = Uri.parse(url);
+  @override
+  Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final isMobile = width < 850;
+
+    return Container(
+      width: double.infinity,
+      padding: EdgeInsets.symmetric(
+        horizontal: isMobile ? 20 : 60,
+        vertical: 95,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _buildHeading(context),
+
+          const SizedBox(height: 45),
+
+          if (isMobile)
+            Column(
+              children: [
+                _ProjectCard(
+                  number: '01',
+                  title: 'Emotion Detection AI',
+                  category: 'AI / MACHINE LEARNING',
+                  description:
+                      'An AI-powered emotion classification system built to recognize human emotions using computer vision and deep learning.',
+                  technologies: [
+                    'Python',
+                    'TensorFlow',
+                    'CNN',
+                    'OpenCV',
+                  ],
+                  icon: Icons.psychology_outlined,
+                  featured: true,
+                  githubUrl:
+                      'https://github.com/uk03499314094-lang/task-2',
+                ),
+
+                const SizedBox(height: 20),
+
+                _ProjectCard(
+                  number: '02',
+                  title: 'MERN Web Application',
+                  category: 'FULL-STACK DEVELOPMENT',
+                  description:
+                      'A modern full-stack web application using React, Node.js, Express and MongoDB with responsive UI and API integration.',
+                  technologies: [
+                    'React',
+                    'Node.js',
+                    'Express',
+                    'MongoDB',
+                  ],
+                  icon: Icons.language_outlined,
+                  githubUrl:
+                      'https://github.com/uk03499314094-lang',
+                ),
+
+                const SizedBox(height: 20),
+
+                _ProjectCard(
+                  number: '03',
+                  title: 'Flutter Portfolio',
+                  category: 'FLUTTER / WEB',
+                  description:
+                      'A responsive personal developer portfolio built with Flutter featuring modern UI, animations and dark/light themes.',
+                  technologies: [
+                    'Flutter',
+                    'Dart',
+                    'Material 3',
+                    'Web',
+                  ],
+                  icon: Icons.phone_android_outlined,
+                  githubUrl:
+                      'https://github.com/uk03499314094-lang',
+                ),
+
+                const SizedBox(height: 20),
+
+                _ProjectCard(
+                  number: '04',
+                  title: 'AI Automation',
+                  category: 'AI / AUTOMATION',
+                  description:
+                      'Automation workflows combining AI, APIs and business processes to reduce repetitive tasks and improve productivity.',
+                  technologies: [
+                    'Python',
+                    'n8n',
+                    'AI',
+                    'APIs',
+                  ],
+                  icon: Icons.auto_awesome_outlined,
+                  githubUrl:
+                      'https://github.com/uk03499314094-lang',
+                ),
+              ],
+            )
+          else
+            Column(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      flex: 3,
+                      child: _ProjectCard(
+                        number: '01',
+                        title: 'Emotion Detection AI',
+                        category: 'AI / MACHINE LEARNING',
+                        description:
+                            'An AI-powered emotion classification system built to recognize human emotions using computer vision and deep learning.',
+                        technologies: [
+                          'Python',
+                          'TensorFlow',
+                          'CNN',
+                          'OpenCV',
+                        ],
+                        icon: Icons.psychology_outlined,
+                        featured: true,
+                        githubUrl:
+                            'https://github.com/uk03499314094-lang/task-2',
+                      ),
+                    ),
+
+                    const SizedBox(width: 20),
+
+                    Expanded(
+                      flex: 2,
+                      child: _ProjectCard(
+                        number: '02',
+                        title: 'MERN Web Application',
+                        category: 'FULL-STACK DEVELOPMENT',
+                        description:
+                            'A modern full-stack web application using React, Node.js, Express and MongoDB.',
+                        technologies: [
+                          'React',
+                          'Node.js',
+                          'Express',
+                          'MongoDB',
+                        ],
+                        icon: Icons.language_outlined,
+                        githubUrl:
+                            'https://github.com/uk03499314094-lang',
+                      ),
+                    ),
+                  ],
+                ),
+
+                const SizedBox(height: 20),
+
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: _ProjectCard(
+                        number: '03',
+                        title: 'Flutter Portfolio',
+                        category: 'FLUTTER / WEB',
+                        description:
+                            'A responsive personal developer portfolio built with Flutter featuring modern UI, animations and dark/light themes.',
+                        technologies: [
+                          'Flutter',
+                          'Dart',
+                          'Material 3',
+                          'Web',
+                        ],
+                        icon: Icons.phone_android_outlined,
+                        githubUrl:
+                            'https://github.com/uk03499314094-lang',
+                      ),
+                    ),
+
+                    const SizedBox(width: 20),
+
+                    Expanded(
+                      child: _ProjectCard(
+                        number: '04',
+                        title: 'AI Automation',
+                        category: 'AI / AUTOMATION',
+                        description:
+                            'Automation workflows combining AI, APIs and business processes to reduce repetitive tasks.',
+                        technologies: [
+                          'Python',
+                          'n8n',
+                          'AI',
+                          'APIs',
+                        ],
+                        icon: Icons.auto_awesome_outlined,
+                        githubUrl:
+                            'https://github.com/uk03499314094-lang',
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeading(BuildContext context) {
+    final primary = Theme.of(context).colorScheme.primary;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Container(
+              width: 35,
+              height: 2,
+              color: primary,
+            ),
+            const SizedBox(width: 10),
+            Text(
+              'SELECTED WORK',
+              style: TextStyle(
+                color: primary,
+                fontSize: 11,
+                fontWeight: FontWeight.w800,
+                letterSpacing: 2,
+              ),
+            ),
+          ],
+        ),
+
+        const SizedBox(height: 12),
+
+        Text(
+          'Featured Projects',
+          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                fontWeight: FontWeight.w900,
+                letterSpacing: -1,
+              ),
+        ),
+
+        const SizedBox(height: 8),
+
+        Text(
+          'A selection of projects built with modern technologies.',
+          style: Theme.of(context).textTheme.bodyMedium,
+        ),
+      ],
+    );
+  }
+}
+
+class _ProjectCard extends StatefulWidget {
+  final String number;
+  final String title;
+  final String category;
+  final String description;
+  final List<String> technologies;
+  final IconData icon;
+  final bool featured;
+  final String githubUrl;
+
+  const _ProjectCard({
+    required this.number,
+    required this.title,
+    required this.category,
+    required this.description,
+    required this.technologies,
+    required this.icon,
+    required this.githubUrl,
+    this.featured = false,
+  });
+
+  @override
+  State<_ProjectCard> createState() => _ProjectCardState();
+}
+
+class _ProjectCardState extends State<_ProjectCard> {
+  bool _hovered = false;
+
+  Future<void> _openGithub() async {
+    final uri = Uri.parse(widget.githubUrl);
 
     if (await canLaunchUrl(uri)) {
       await launchUrl(
         uri,
-        mode: LaunchMode.externalApplication,
+        webOnlyWindowName: '_blank',
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final isMobile = screenWidth < 800;
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
 
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 24 : 70,
-        vertical: 90,
+    return MouseRegion(
+      cursor: SystemMouseCursors.click,
+
+      onEnter: (_) {
+        setState(() {
+          _hovered = true;
+        });
+      },
+
+      onExit: (_) {
+        setState(() {
+          _hovered = false;
+        });
+      },
+
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 280),
+
+        width: double.infinity,
+
+        transform: Matrix4.identity()
+          ..translate(
+            0.0,
+            _hovered ? -7.0 : 0.0,
+          ),
+
+        decoration: BoxDecoration(
+          color: const Color(0xFF0B1118),
+
+          borderRadius: BorderRadius.circular(20),
+
+          border: Border.all(
+            color: _hovered
+                ? primary.withValues(alpha: 0.60)
+                : const Color(0xFF202B36),
+          ),
+
+          boxShadow: _hovered
+              ? [
+                  BoxShadow(
+                    color: primary.withValues(alpha: 0.13),
+                    blurRadius: 40,
+                    spreadRadius: 1,
+                  ),
+                ]
+              : [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.15),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+        ),
+
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildProjectVisual(primary),
+
+            Padding(
+              padding: const EdgeInsets.all(25),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        widget.category,
+                        style: TextStyle(
+                          color: primary,
+                          fontSize: 9,
+                          fontWeight: FontWeight.w900,
+                          letterSpacing: 1.5,
+                        ),
+                      ),
+
+                      Text(
+                        widget.number,
+                        style: TextStyle(
+                          color: primary.withValues(alpha: 0.4),
+                          fontSize: 22,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 10),
+
+                  Text(
+                    widget.title,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w900,
+                      letterSpacing: -0.5,
+                    ),
+                  ),
+
+                  const SizedBox(height: 11),
+
+                  Text(
+                    widget.description,
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      color: const Color(0xFF9AA6B2),
+                      height: 1.65,
+                    ),
+                  ),
+
+                  const SizedBox(height: 18),
+
+                  Wrap(
+                    spacing: 7,
+                    runSpacing: 7,
+                    children: widget.technologies
+                        .map(
+                          (tech) => _TechChip(
+                            text: tech,
+                            primary: primary,
+                          ),
+                        )
+                        .toList(),
+                  ),
+
+                  const SizedBox(height: 22),
+
+                  Row(
+                    mainAxisAlignment:
+                        MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton.icon(
+                        onPressed: _openGithub,
+                        style: TextButton.styleFrom(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 0,
+                            vertical: 8,
+                          ),
+                          foregroundColor: primary,
+                        ),
+                        icon: const Icon(
+                          Icons.code_rounded,
+                          size: 17,
+                        ),
+                        label: const Text(
+                          'VIEW GITHUB',
+                          style: TextStyle(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w900,
+                            letterSpacing: 1,
+                          ),
+                        ),
+                      ),
+
+                      AnimatedContainer(
+                        duration:
+                            const Duration(milliseconds: 250),
+                        transform: Matrix4.identity()
+                          ..translate(
+                            _hovered ? 5.0 : 0.0,
+                            0.0,
+                          ),
+                        child: Icon(
+                          Icons.arrow_forward_rounded,
+                          color: primary,
+                          size: 18,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            'MY PROJECTS',
-            style: TextStyle(
-              color: Theme.of(context).colorScheme.primary,
-              fontSize: 14,
-              fontWeight: FontWeight.w700,
-              letterSpacing: 2,
+    );
+  }
+
+  Widget _buildProjectVisual(Color primary) {
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+
+      height: widget.featured ? 230 : 190,
+
+      width: double.infinity,
+
+      decoration: BoxDecoration(
+        color: const Color(0xFF070B10),
+
+        borderRadius: const BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+
+        border: Border(
+          bottom: BorderSide(
+            color: primary.withValues(
+              alpha: _hovered ? 0.25 : 0.10,
             ),
           ),
-          const SizedBox(height: 12),
-          Text(
-            'Things I have built.',
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.w800,
+        ),
+      ),
+
+      child: Stack(
+        children: [
+          Positioned(
+            top: -60,
+            right: -40,
+            child: AnimatedContainer(
+              duration: const Duration(milliseconds: 500),
+              width: _hovered ? 220 : 190,
+              height: _hovered ? 220 : 190,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: primary.withValues(alpha: 0.08),
+                  width: 2,
                 ),
+              ),
+            ),
           ),
-          const SizedBox(height: 40),
 
-          GridView.count(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            crossAxisCount: isMobile ? 1 : 2,
-            crossAxisSpacing: 24,
-            mainAxisSpacing: 24,
-            childAspectRatio: isMobile ? 1.2 : 1.15,
-            children: [
-              _ProjectCard(
-                icon: Icons.psychology_outlined,
-                title: 'Emotion Detection AI',
-                description:
-                    'An AI and machine learning project that detects human emotions from facial expressions.',
-                technologies: 'Python • TensorFlow • CNN',
-                onGithub: () {
-                  _openUrl(
-                    'https://github.com/uk03499314094-lang',
-                  );
-                },
-                onLiveDemo: null,
+          Positioned(
+            bottom: -70,
+            left: -50,
+            child: Container(
+              width: 180,
+              height: 180,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(
+                  color: primary.withValues(alpha: 0.05),
+                  width: 2,
+                ),
               ),
+            ),
+          ),
 
-              _ProjectCard(
-                icon: Icons.shopping_bag_outlined,
-                title: 'MERN Web Application',
-                description:
-                    'A modern full-stack web application with responsive UI and backend API integration.',
-                technologies: 'React • Node.js • MongoDB',
-                onGithub: () {
-                  _openUrl(
-                    'https://github.com/uk03499314094-lang',
-                  );
-                },
-                onLiveDemo: null,
-              ),
+          Center(
+            child: AnimatedScale(
+              duration: const Duration(milliseconds: 300),
+              scale: _hovered ? 1.12 : 1.0,
 
-              _ProjectCard(
-                icon: Icons.phone_android_outlined,
-                title: 'Flutter Portfolio',
-                description:
-                    'A responsive personal portfolio application built with Flutter and Dart.',
-                technologies: 'Flutter • Dart • Material 3',
-                onGithub: () {
-                  _openUrl(
-                    'https://github.com/uk03499314094-lang',
-                  );
-                },
-                onLiveDemo: null,
-              ),
+              child: Container(
+                width: 95,
+                height: 95,
 
-              _ProjectCard(
-                icon: Icons.auto_awesome_outlined,
-                title: 'AI Automation',
-                description:
-                    'Automation workflows designed to connect AI tools, APIs and business processes.',
-                technologies: 'Python • n8n • AI',
-                onGithub: () {
-                  _openUrl(
-                    'https://github.com/uk03499314094-lang',
-                  );
-                },
-                onLiveDemo: null,
+                decoration: BoxDecoration(
+                  color: primary.withValues(alpha: 0.07),
+                  shape: BoxShape.circle,
+
+                  border: Border.all(
+                    color: primary.withValues(alpha: 0.25),
+                  ),
+
+                  boxShadow: [
+                    BoxShadow(
+                      color: primary.withValues(alpha: 0.10),
+                      blurRadius: 35,
+                    ),
+                  ],
+                ),
+
+                child: Icon(
+                  widget.icon,
+                  color: primary,
+                  size: 45,
+                ),
               ),
-            ],
+            ),
+          ),
+
+          Positioned(
+            top: 18,
+            left: 20,
+            child: Container(
+              padding: const EdgeInsets.symmetric(
+                horizontal: 9,
+                vertical: 6,
+              ),
+              decoration: BoxDecoration(
+                color: Colors.black.withValues(alpha: 0.35),
+                borderRadius: BorderRadius.circular(7),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.08),
+                ),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    width: 6,
+                    height: 6,
+                    decoration: BoxDecoration(
+                      color: primary,
+                      shape: BoxShape.circle,
+                    ),
+                  ),
+                  const SizedBox(width: 6),
+                  const Text(
+                    'PROJECT',
+                    style: TextStyle(
+                      color: Colors.white70,
+                      fontSize: 8,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ],
       ),
@@ -118,112 +616,38 @@ class ProjectsSection extends StatelessWidget {
   }
 }
 
-class _ProjectCard extends StatelessWidget {
-  final IconData icon;
-  final String title;
-  final String description;
-  final String technologies;
-  final VoidCallback onGithub;
-  final VoidCallback? onLiveDemo;
+class _TechChip extends StatelessWidget {
+  final String text;
+  final Color primary;
 
-  const _ProjectCard({
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.technologies,
-    required this.onGithub,
-    required this.onLiveDemo,
+  const _TechChip({
+    required this.text,
+    required this.primary,
   });
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
-
     return Container(
-      padding: const EdgeInsets.all(26),
+      padding: const EdgeInsets.symmetric(
+        horizontal: 9,
+        vertical: 6,
+      ),
+
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surfaceContainer,
-        borderRadius: BorderRadius.circular(24),
+        color: primary.withValues(alpha: 0.06),
+        borderRadius: BorderRadius.circular(7),
         border: Border.all(
-          color: Theme.of(context).colorScheme.outlineVariant,
+          color: primary.withValues(alpha: 0.12),
         ),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: 62,
-            height: 62,
-            decoration: BoxDecoration(
-              color: primary.withValues(alpha: 0.12),
-              borderRadius: BorderRadius.circular(17),
-            ),
-            child: Icon(
-              icon,
-              color: primary,
-              size: 30,
-            ),
-          ),
 
-          const SizedBox(height: 22),
-
-          Text(
-            title,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.w800,
-            ),
-          ),
-
-          const SizedBox(height: 12),
-
-          Expanded(
-            child: Text(
-              description,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    height: 1.6,
-                  ),
-            ),
-          ),
-
-          const SizedBox(height: 15),
-
-          Text(
-            technologies,
-            style: TextStyle(
-              color: primary,
-              fontSize: 13,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-
-          const SizedBox(height: 18),
-
-          Wrap(
-            spacing: 10,
-            runSpacing: 10,
-            children: [
-              OutlinedButton.icon(
-                onPressed: onGithub,
-                icon: const Icon(
-                  Icons.code,
-                  size: 18,
-                ),
-                label: const Text('GitHub'),
-              ),
-
-              if (onLiveDemo != null)
-                TextButton.icon(
-                  onPressed: onLiveDemo,
-                  icon: const Icon(
-                    Icons.open_in_new,
-                    size: 18,
-                  ),
-                  label: const Text('Live Demo'),
-                ),
-            ],
-          ),
-        ],
+      child: Text(
+        text,
+        style: TextStyle(
+          color: primary,
+          fontSize: 9,
+          fontWeight: FontWeight.w700,
+        ),
       ),
     );
   }
