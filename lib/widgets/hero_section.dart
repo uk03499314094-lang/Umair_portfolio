@@ -65,11 +65,9 @@ class _HeroSectionState extends State<HeroSection>
             child: AnimatedBuilder(
               animation: _controller,
               builder: (context, child) {
-                final value = _controller.value;
-
                 return CustomPaint(
                   painter: _HeroBackgroundPainter(
-                    progress: value,
+                    progress: _controller.value,
                     primary: Theme.of(context).colorScheme.primary,
                   ),
                 );
@@ -101,7 +99,9 @@ class _HeroSectionState extends State<HeroSection>
           flex: 55,
           child: _buildContent(context),
         ),
+
         const SizedBox(width: 35),
+
         Expanded(
           flex: 45,
           child: _buildVisual(context),
@@ -114,7 +114,7 @@ class _HeroSectionState extends State<HeroSection>
     return Column(
       children: [
         _buildVisual(context),
-        const SizedBox(height: 55),
+        const SizedBox(height: 45),
         _buildContent(context),
       ],
     );
@@ -123,6 +123,15 @@ class _HeroSectionState extends State<HeroSection>
   Widget _buildContent(BuildContext context) {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
+    final isDark = theme.brightness == Brightness.dark;
+
+    final mainTextColor = isDark
+        ? Colors.white
+        : const Color(0xFF10151B);
+
+    final secondaryTextColor = isDark
+        ? const Color(0xFFD0D6DD)
+        : const Color(0xFF4F5B68);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,11 +140,13 @@ class _HeroSectionState extends State<HeroSection>
         Row(
           children: [
             Container(
-              width: 32,
+              width: 34,
               height: 2,
               color: primary,
             ),
+
             const SizedBox(width: 10),
+
             Text(
               "HELLO, I'M",
               style: TextStyle(
@@ -160,11 +171,16 @@ class _HeroSectionState extends State<HeroSection>
               height: 0.98,
               letterSpacing: -2.5,
               fontWeight: FontWeight.w900,
+              color: mainTextColor,
             ),
             children: [
-              const TextSpan(
+              TextSpan(
                 text: 'Umair ',
+                style: TextStyle(
+                  color: mainTextColor,
+                ),
               ),
+
               TextSpan(
                 text: 'Khan',
                 style: TextStyle(
@@ -175,14 +191,17 @@ class _HeroSectionState extends State<HeroSection>
           ),
         ),
 
-        const SizedBox(height: 15),
+        const SizedBox(height: 18),
 
         // Role
         Text(
           'Full-Stack Developer | Flutter Developer | AI & Automation',
           style: theme.textTheme.titleLarge?.copyWith(
-            color: Colors.white,
-            fontWeight: FontWeight.w600,
+            color: isDark
+                ? Colors.white
+                : const Color(0xFF202832),
+            fontWeight: FontWeight.w700,
+            height: 1.35,
           ),
         ),
 
@@ -198,13 +217,13 @@ class _HeroSectionState extends State<HeroSection>
             'experiences with clean code, scalable solutions '
             'and creative ideas.',
             style: theme.textTheme.bodyLarge?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
+              color: secondaryTextColor,
               height: 1.65,
             ),
           ),
         ),
 
-        const SizedBox(height: 28),
+        const SizedBox(height: 30),
 
         // Buttons
         Wrap(
@@ -219,6 +238,7 @@ class _HeroSectionState extends State<HeroSection>
               ),
               label: const Text('HIRE ME'),
             ),
+
             OutlinedButton.icon(
               onPressed: widget.onProjectsTap,
               icon: const Icon(
@@ -230,7 +250,7 @@ class _HeroSectionState extends State<HeroSection>
           ],
         ),
 
-        const SizedBox(height: 24),
+        const SizedBox(height: 25),
 
         // Availability
         Row(
@@ -243,26 +263,32 @@ class _HeroSectionState extends State<HeroSection>
                 shape: BoxShape.circle,
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.greenAccent.withValues(alpha: 0.5),
+                    color: Colors.greenAccent.withValues(
+                      alpha: 0.5,
+                    ),
                     blurRadius: 8,
                   ),
                 ],
               ),
             ),
-            const SizedBox(width: 8),
-            const Text(
+
+            const SizedBox(width: 9),
+
+            Text(
               'AVAILABLE FOR FREELANCE',
               style: TextStyle(
                 fontSize: 10,
-                fontWeight: FontWeight.w700,
+                fontWeight: FontWeight.w800,
                 letterSpacing: 1,
-                color: Colors.white70,
+                color: isDark
+                    ? Colors.white70
+                    : const Color(0xFF3D4854),
               ),
             ),
           ],
         ),
 
-        const SizedBox(height: 22),
+        const SizedBox(height: 23),
 
         // Socials
         Row(
@@ -275,7 +301,9 @@ class _HeroSectionState extends State<HeroSection>
                 );
               },
             ),
+
             const SizedBox(width: 10),
+
             _SocialIcon(
               icon: Icons.business_center_outlined,
               onTap: () {
@@ -284,7 +312,9 @@ class _HeroSectionState extends State<HeroSection>
                 );
               },
             ),
+
             const SizedBox(width: 10),
+
             _SocialIcon(
               icon: Icons.email_outlined,
               onTap: () {
@@ -300,7 +330,10 @@ class _HeroSectionState extends State<HeroSection>
   }
 
   Widget _buildVisual(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final isDark = theme.brightness == Brightness.dark;
+
     final width = MediaQuery.of(context).size.width;
     final isMobile = width < 850;
 
@@ -341,7 +374,9 @@ class _HeroSectionState extends State<HeroSection>
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
-                                color: primary.withValues(alpha: 0.7),
+                                color: primary.withValues(
+                                  alpha: 0.7,
+                                ),
                                 blurRadius: 14,
                               ),
                             ],
@@ -363,7 +398,9 @@ class _HeroSectionState extends State<HeroSection>
               shape: BoxShape.circle,
               boxShadow: [
                 BoxShadow(
-                  color: primary.withValues(alpha: 0.16),
+                  color: primary.withValues(
+                    alpha: isDark ? 0.16 : 0.10,
+                  ),
                   blurRadius: 70,
                   spreadRadius: 15,
                 ),
@@ -390,13 +427,52 @@ class _HeroSectionState extends State<HeroSection>
               padding: const EdgeInsets.all(5),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: const Color(0xFF070B10),
+                color: isDark
+                    ? const Color(0xFF070B10)
+                    : const Color(0xFFF5F7FA),
               ),
               child: ClipOval(
                 child: Image.asset(
                   'assets/images/profile.jpg',
                   fit: BoxFit.cover,
                   alignment: Alignment.topCenter,
+
+                  // Professional fallback if image is missing.
+                  errorBuilder: (
+                    context,
+                    error,
+                    stackTrace,
+                  ) {
+                    return Container(
+                      color: isDark
+                          ? const Color(0xFF0B1118)
+                          : const Color(0xFFE9EDF2),
+                      child: Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(
+                              Icons.person_outline_rounded,
+                              size: 75,
+                              color: primary.withValues(
+                                alpha: 0.7,
+                              ),
+                            ),
+                            const SizedBox(height: 10),
+                            Text(
+                              'UMAIR KHAN',
+                              style: TextStyle(
+                                color: primary,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w900,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
                 ),
               ),
             ),
@@ -452,6 +528,7 @@ class _HeroSectionState extends State<HeroSection>
             right: isMobile ? 25 : 45,
             child: _Dot(color: primary),
           ),
+
           Positioned(
             bottom: 25,
             left: isMobile ? 30 : 55,
@@ -514,7 +591,8 @@ class _TechBadgeState extends State<_TechBadge>
               vertical: 9,
             ),
             decoration: BoxDecoration(
-              color: const Color(0xFF111821).withValues(alpha: 0.94),
+              color: const Color(0xFF111821)
+                  .withValues(alpha: 0.94),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
                 color: widget.primary.withValues(alpha: 0.20),
@@ -534,10 +612,13 @@ class _TechBadgeState extends State<_TechBadge>
                   size: 17,
                   color: widget.primary,
                 ),
+
                 const SizedBox(width: 7),
+
                 Text(
                   widget.title,
                   style: const TextStyle(
+                    color: Colors.white,
                     fontSize: 11,
                     fontWeight: FontWeight.w700,
                   ),
@@ -569,33 +650,51 @@ class _SocialIconState extends State<_SocialIcon> {
 
   @override
   Widget build(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final isDark = theme.brightness == Brightness.dark;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => hovered = true),
-      onExit: (_) => setState(() => hovered = false),
+      onEnter: (_) {
+        setState(() {
+          hovered = true;
+        });
+      },
+      onExit: (_) {
+        setState(() {
+          hovered = false;
+        });
+      },
       child: GestureDetector(
         onTap: widget.onTap,
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 180),
-          width: 38,
-          height: 38,
+          width: 40,
+          height: 40,
           decoration: BoxDecoration(
             color: hovered
                 ? primary.withValues(alpha: 0.12)
-                : const Color(0xFF111821),
+                : isDark
+                    ? const Color(0xFF111821)
+                    : Colors.white,
             borderRadius: BorderRadius.circular(9),
             border: Border.all(
               color: hovered
                   ? primary.withValues(alpha: 0.45)
-                  : const Color(0xFF26313D),
+                  : isDark
+                      ? const Color(0xFF26313D)
+                      : const Color(0xFFD0D5DB),
             ),
           ),
           child: Icon(
             widget.icon,
-            size: 17,
-            color: hovered ? primary : Colors.white70,
+            size: 18,
+            color: hovered
+                ? primary
+                : isDark
+                    ? Colors.white70
+                    : const Color(0xFF4F5B68),
           ),
         ),
       ),
@@ -669,12 +768,17 @@ class _HeroBackgroundPainter extends CustomPainter {
 
     for (int i = 0; i < 18; i++) {
       final angle =
-          (i / 18) * math.pi * 2 + progress * math.pi * 2;
+          (i / 18) * math.pi * 2 +
+          progress * math.pi * 2;
 
-      final radius = 180.0 + (i % 3) * 55;
+      final radius =
+          180.0 + (i % 3) * 55;
 
-      final x = center.dx + math.cos(angle) * radius;
-      final y = center.dy + math.sin(angle) * radius;
+      final x =
+          center.dx + math.cos(angle) * radius;
+
+      final y =
+          center.dy + math.sin(angle) * radius;
 
       particlePaint.color = primary.withValues(
         alpha: 0.12,
@@ -689,7 +793,9 @@ class _HeroBackgroundPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _HeroBackgroundPainter oldDelegate) {
+  bool shouldRepaint(
+    covariant _HeroBackgroundPainter oldDelegate,
+  ) {
     return oldDelegate.progress != progress;
   }
 }
