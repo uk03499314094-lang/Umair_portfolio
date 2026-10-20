@@ -19,52 +19,43 @@ class PortfolioNavbar extends StatelessWidget {
   });
 
   void _openMobileMenu(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
 
-    showModalBottomSheet(
+    showModalBottomSheet<void>(
       context: context,
       backgroundColor: const Color(0xFF0B1118),
       isScrollControlled: true,
+      useSafeArea: true,
+      showDragHandle: true,
       shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(24),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
       ),
-      builder: (context) {
-        return SafeArea(
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(22, 12, 22, 25),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  width: 42,
-                  height: 4,
-                  decoration: BoxDecoration(
-                    color: Colors.white24,
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-
-                const SizedBox(height: 25),
-
-                Row(
-                  children: [
-                    _Logo(primary: primary),
-                    const SizedBox(width: 12),
-                    const Column(
+      builder: (sheetContext) {
+        return Padding(
+          padding: const EdgeInsets.fromLTRB(22, 8, 22, 24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Row(
+                children: [
+                  _Logo(primary: primary, size: 42),
+                  const SizedBox(width: 12),
+                  const Expanded(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
                           'UMAIR KHAN',
                           style: TextStyle(
+                            color: Colors.white,
                             fontWeight: FontWeight.w900,
                             letterSpacing: 1,
                           ),
                         ),
-                        SizedBox(height: 2),
+                        SizedBox(height: 3),
                         Text(
-                          'Full-Stack Developer',
+                          'Full-Stack • Flutter • AI',
                           style: TextStyle(
                             fontSize: 11,
                             color: Colors.white54,
@@ -72,81 +63,87 @@ class PortfolioNavbar extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ],
-                ),
-
-                const SizedBox(height: 22),
-
-                _MobileItem(
-                  icon: Icons.home_outlined,
-                  title: 'Home',
-                  onTap: () => Navigator.pop(context),
-                ),
-                _MobileItem(
-                  icon: Icons.person_outline,
-                  title: 'About',
-                  onTap: () {
-                    Navigator.pop(context);
-                    onAboutTap();
-                  },
-                ),
-                _MobileItem(
-                  icon: Icons.design_services_outlined,
-                  title: 'Services',
-                  onTap: () {
-                    Navigator.pop(context);
-                    onServicesTap();
-                  },
-                ),
-                _MobileItem(
-                  icon: Icons.code_outlined,
-                  title: 'Skills',
-                  onTap: () {
-                    Navigator.pop(context);
-                    onSkillsTap();
-                  },
-                ),
-                _MobileItem(
-                  icon: Icons.work_outline,
-                  title: 'Projects',
-                  onTap: () {
-                    Navigator.pop(context);
-                    onProjectsTap();
-                  },
-                ),
-                _MobileItem(
-                  icon: Icons.mail_outline,
-                  title: 'Contact',
-                  onTap: () {
-                    Navigator.pop(context);
+                  ),
+                  IconButton(
+                    tooltip: 'Close menu',
+                    onPressed: () => Navigator.pop(sheetContext),
+                    icon: const Icon(Icons.close_rounded, color: Colors.white70),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 18),
+              _MobileItem(
+                icon: Icons.home_outlined,
+                title: 'Home',
+                onTap: () => Navigator.pop(sheetContext),
+              ),
+              _MobileItem(
+                icon: Icons.person_outline_rounded,
+                title: 'About',
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  onAboutTap();
+                },
+              ),
+              _MobileItem(
+                icon: Icons.design_services_outlined,
+                title: 'Services',
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  onServicesTap();
+                },
+              ),
+              _MobileItem(
+                icon: Icons.code_rounded,
+                title: 'Skills',
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  onSkillsTap();
+                },
+              ),
+              _MobileItem(
+                icon: Icons.work_outline_rounded,
+                title: 'Projects',
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  onProjectsTap();
+                },
+              ),
+              _MobileItem(
+                icon: Icons.mail_outline_rounded,
+                title: 'Contact',
+                onTap: () {
+                  Navigator.pop(sheetContext);
+                  onContactTap();
+                },
+              ),
+              const SizedBox(height: 10),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    Navigator.pop(sheetContext);
                     onContactTap();
                   },
-                ),
-
-                const SizedBox(height: 8),
-
-                SizedBox(
-                  width: double.infinity,
-                  child: ElevatedButton.icon(
-                    onPressed: () {
-                      Navigator.pop(context);
-                      onContactTap();
-                    },
-                    icon: const Icon(Icons.arrow_forward_rounded),
-                    label: const Text("LET'S TALK"),
+                  icon: const Icon(Icons.arrow_forward_rounded),
+                  label: const Text("LET'S TALK"),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: primary,
+                    foregroundColor: Colors.black,
+                    padding: const EdgeInsets.symmetric(vertical: 15),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
-
-                const SizedBox(height: 10),
-
-                IconButton(
-                  onPressed: onThemeToggle,
-                  icon: const Icon(
-                    Icons.dark_mode_outlined,
-                  ),
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(height: 8),
+              IconButton(
+                tooltip: 'Toggle theme',
+                onPressed: onThemeToggle,
+                icon: const Icon(Icons.dark_mode_outlined, color: Colors.white70),
+              ),
+            ],
           ),
         );
       },
@@ -155,7 +152,7 @@ class PortfolioNavbar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
+    final width = MediaQuery.sizeOf(context).width;
     final isMobile = width < 850;
     final primary = Theme.of(context).colorScheme.primary;
 
@@ -166,33 +163,30 @@ class PortfolioNavbar extends StatelessWidget {
         vertical: 13,
       ),
       decoration: BoxDecoration(
-        color: const Color(0xFF070B10).withValues(alpha: 0.94),
+        color: const Color(0xFF070B10).withValues(alpha: 0.96),
         border: const Border(
-          bottom: BorderSide(
-            color: Color(0xFF1B252F),
-            width: 1,
-          ),
+          bottom: BorderSide(color: Color(0xFF1B252F), width: 1),
         ),
         boxShadow: [
           BoxShadow(
             color: Colors.black.withValues(alpha: 0.18),
             blurRadius: 20,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
       child: Row(
         children: [
-          _Logo(primary: primary),
-
+          _Logo(primary: primary, size: 38),
           if (!isMobile) ...[
             const SizedBox(width: 12),
-
             const Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   'UMAIR KHAN',
                   style: TextStyle(
+                    color: Colors.white,
                     fontSize: 14,
                     fontWeight: FontWeight.w900,
                     letterSpacing: 1.2,
@@ -202,79 +196,51 @@ class PortfolioNavbar extends StatelessWidget {
                 Text(
                   'FULL-STACK • FLUTTER • AI',
                   style: TextStyle(
-                    fontSize: 8,
                     color: Colors.white54,
+                    fontSize: 8,
                     letterSpacing: 0.8,
                   ),
                 ),
               ],
             ),
           ],
-
           const Spacer(),
-
           if (!isMobile) ...[
-            _NavItem(
-              title: 'Home',
-              active: true,
-              onTap: () {},
-            ),
-            _NavItem(
-              title: 'About',
-              onTap: onAboutTap,
-            ),
-            _NavItem(
-              title: 'Services',
-              onTap: onServicesTap,
-            ),
-            _NavItem(
-              title: 'Skills',
-              onTap: onSkillsTap,
-            ),
-            _NavItem(
-              title: 'Projects',
-              onTap: onProjectsTap,
-            ),
-            _NavItem(
-              title: 'Contact',
-              onTap: onContactTap,
-            ),
-
-            const SizedBox(width: 12),
-
-            // Theme toggle
-            Container(
-              width: 46,
-              height: 26,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(
-                  color: Colors.white24,
+            _NavItem(title: 'Home', active: true, onTap: () {}),
+            _NavItem(title: 'About', onTap: onAboutTap),
+            _NavItem(title: 'Services', onTap: onServicesTap),
+            _NavItem(title: 'Skills', onTap: onSkillsTap),
+            _NavItem(title: 'Projects', onTap: onProjectsTap),
+            _NavItem(title: 'Contact', onTap: onContactTap),
+            const SizedBox(width: 8),
+            Tooltip(
+              message: 'Toggle theme',
+              child: Container(
+                width: 42,
+                height: 36,
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(18),
+                  border: Border.all(color: Colors.white24),
                 ),
-              ),
-              child: IconButton(
-                padding: EdgeInsets.zero,
-                onPressed: onThemeToggle,
-                iconSize: 15,
-                icon: const Icon(
-                  Icons.dark_mode_outlined,
+                child: IconButton(
+                  padding: EdgeInsets.zero,
+                  onPressed: onThemeToggle,
+                  iconSize: 16,
+                  icon: const Icon(
+                    Icons.dark_mode_outlined,
+                    color: Colors.white70,
+                  ),
                 ),
               ),
             ),
-
             const SizedBox(width: 12),
-
-            // Let's Talk
             OutlinedButton(
               onPressed: onContactTap,
               style: OutlinedButton.styleFrom(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 17,
-                  vertical: 11,
-                ),
-                side: BorderSide(
-                  color: primary.withValues(alpha: 0.8),
-                ),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 17, vertical: 11),
+                foregroundColor: Colors.white,
+                side: BorderSide(color: primary.withValues(alpha: 0.8)),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(20),
                 ),
@@ -290,11 +256,7 @@ class PortfolioNavbar extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 7),
-                  Icon(
-                    Icons.arrow_forward_rounded,
-                    size: 14,
-                    color: primary,
-                  ),
+                  Icon(Icons.arrow_forward_rounded, size: 14, color: primary),
                 ],
               ),
             ),
@@ -303,15 +265,12 @@ class PortfolioNavbar extends StatelessWidget {
               decoration: BoxDecoration(
                 color: primary.withValues(alpha: 0.10),
                 borderRadius: BorderRadius.circular(11),
-                border: Border.all(
-                  color: primary.withValues(alpha: 0.20),
-                ),
+                border: Border.all(color: primary.withValues(alpha: 0.25)),
               ),
               child: IconButton(
+                tooltip: 'Open navigation menu',
                 onPressed: () => _openMobileMenu(context),
-                icon: const Icon(
-                  Icons.menu_rounded,
-                ),
+                icon: const Icon(Icons.menu_rounded, color: Colors.white),
               ),
             ),
         ],
@@ -322,32 +281,37 @@ class PortfolioNavbar extends StatelessWidget {
 
 class _Logo extends StatelessWidget {
   final Color primary;
+  final double size;
 
-  const _Logo({
-    required this.primary,
-  });
+  const _Logo({required this.primary, this.size = 36});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 36,
-      height: 36,
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 220),
+      width: size,
+      height: size,
       decoration: BoxDecoration(
-        color: primary,
-        borderRadius: BorderRadius.circular(9),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [primary, primary.withValues(alpha: 0.78)],
+        ),
+        borderRadius: BorderRadius.circular(11),
         boxShadow: [
           BoxShadow(
-            color: primary.withValues(alpha: 0.30),
-            blurRadius: 15,
+            color: primary.withValues(alpha: 0.25),
+            blurRadius: 17,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       alignment: Alignment.center,
-      child: const Text(
+      child: Text(
         'U',
         style: TextStyle(
           color: Colors.black,
-          fontSize: 19,
+          fontSize: size * 0.52,
           fontWeight: FontWeight.w900,
         ),
       ),
@@ -371,31 +335,28 @@ class _NavItem extends StatefulWidget {
 }
 
 class _NavItemState extends State<_NavItem> {
-  bool hovered = false;
+  bool _hovered = false;
 
   @override
   Widget build(BuildContext context) {
     final primary = Theme.of(context).colorScheme.primary;
+    final highlighted = widget.active || _hovered;
 
     return MouseRegion(
       cursor: SystemMouseCursors.click,
-      onEnter: (_) => setState(() => hovered = true),
-      onExit: (_) => setState(() => hovered = false),
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       child: GestureDetector(
         onTap: widget.onTap,
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 180),
-          margin: const EdgeInsets.symmetric(horizontal: 4),
-          padding: const EdgeInsets.symmetric(
-            horizontal: 11,
-            vertical: 12,
-          ),
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeOutCubic,
+          margin: const EdgeInsets.symmetric(horizontal: 3),
+          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
           decoration: BoxDecoration(
             border: Border(
               bottom: BorderSide(
-                color: widget.active || hovered
-                    ? primary
-                    : Colors.transparent,
+                color: highlighted ? primary : Colors.transparent,
                 width: 2,
               ),
             ),
@@ -404,11 +365,9 @@ class _NavItemState extends State<_NavItem> {
             widget.title.toUpperCase(),
             style: TextStyle(
               fontSize: 10,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.w800,
               letterSpacing: 0.5,
-              color: widget.active || hovered
-                  ? primary
-                  : Colors.white70,
+              color: highlighted ? primary : Colors.white70,
             ),
           ),
         ),
@@ -434,20 +393,21 @@ class _MobileItem extends StatelessWidget {
 
     return ListTile(
       onTap: onTap,
-      leading: Icon(
-        icon,
-        color: primary,
-      ),
+      leading: Icon(icon, color: primary),
       title: Text(
         title,
         style: const TextStyle(
+          color: Colors.white,
           fontWeight: FontWeight.w700,
         ),
       ),
       trailing: const Icon(
         Icons.arrow_forward_ios_rounded,
         size: 14,
+        color: Colors.white54,
       ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      hoverColor: primary.withValues(alpha: 0.08),
     );
   }
 }

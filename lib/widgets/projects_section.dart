@@ -4,209 +4,93 @@ import 'package:url_launcher/url_launcher.dart';
 class ProjectsSection extends StatelessWidget {
   const ProjectsSection({super.key});
 
+  static const List<_ProjectInfo> _projects = [
+    _ProjectInfo(
+      number: '01',
+      title: 'Emotion Detection AI',
+      category: 'AI / MACHINE LEARNING',
+      description:
+          'An AI-powered emotion classification system designed to recognize human emotions using computer vision and deep learning.',
+      technologies: ['Python', 'TensorFlow', 'CNN', 'OpenCV'],
+      icon: Icons.psychology_outlined,
+      githubUrl: 'https://github.com/uk03499314094-lang/task-2',
+      featured: true,
+    ),
+    _ProjectInfo(
+      number: '02',
+      title: 'MERN Web Application',
+      category: 'FULL-STACK DEVELOPMENT',
+      description:
+          'A full-stack web application concept using React, Node.js, Express and MongoDB, with a responsive interface and API integration.',
+      technologies: ['React', 'Node.js', 'Express', 'MongoDB'],
+      icon: Icons.language_rounded,
+      githubUrl: 'https://github.com/uk03499314094-lang',
+    ),
+    _ProjectInfo(
+      number: '03',
+      title: 'Flutter Portfolio',
+      category: 'FLUTTER / WEB',
+      description:
+          'A responsive personal developer portfolio built with Flutter, featuring modern UI, animations and dark/light theme support.',
+      technologies: ['Flutter', 'Dart', 'Material 3', 'Web'],
+      icon: Icons.phone_android_rounded,
+      githubUrl: 'https://github.com/uk03499314094-lang/Umair_portfolio',
+    ),
+    _ProjectInfo(
+      number: '04',
+      title: 'AI Automation',
+      category: 'AI / AUTOMATION',
+      description:
+          'Automation workflow concepts that connect AI tools, APIs and business processes to reduce repetitive tasks and improve productivity.',
+      technologies: ['Python', 'n8n', 'AI', 'APIs'],
+      icon: Icons.auto_awesome_rounded,
+      githubUrl: 'https://github.com/uk03499314094-lang',
+    ),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 850;
+    final width = MediaQuery.sizeOf(context).width;
+    final columns = width >= 1050 ? 2 : 1;
+    final horizontalPadding = width < 600 ? 18.0 : (width < 1000 ? 34.0 : 60.0);
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 60,
-        vertical: 95,
+        horizontal: horizontalPadding,
+        vertical: width < 600 ? 64 : 88,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeading(context),
-
-          const SizedBox(height: 45),
-
-          if (isMobile)
-            Column(
-              children: [
-                _ProjectCard(
-                  number: '01',
-                  title: 'Emotion Detection AI',
-                  category: 'AI / MACHINE LEARNING',
-                  description:
-                      'An AI-powered emotion classification system built to recognize human emotions using computer vision and deep learning.',
-                  technologies: [
-                    'Python',
-                    'TensorFlow',
-                    'CNN',
-                    'OpenCV',
-                  ],
-                  icon: Icons.psychology_outlined,
-                  featured: true,
-                  githubUrl:
-                      'https://github.com/uk03499314094-lang/task-2',
-                ),
-
-                const SizedBox(height: 20),
-
-                _ProjectCard(
-                  number: '02',
-                  title: 'MERN Web Application',
-                  category: 'FULL-STACK DEVELOPMENT',
-                  description:
-                      'A modern full-stack web application using React, Node.js, Express and MongoDB with responsive UI and API integration.',
-                  technologies: [
-                    'React',
-                    'Node.js',
-                    'Express',
-                    'MongoDB',
-                  ],
-                  icon: Icons.language_outlined,
-                  githubUrl:
-                      'https://github.com/uk03499314094-lang',
-                ),
-
-                const SizedBox(height: 20),
-
-                _ProjectCard(
-                  number: '03',
-                  title: 'Flutter Portfolio',
-                  category: 'FLUTTER / WEB',
-                  description:
-                      'A responsive personal developer portfolio built with Flutter featuring modern UI, animations and dark/light themes.',
-                  technologies: [
-                    'Flutter',
-                    'Dart',
-                    'Material 3',
-                    'Web',
-                  ],
-                  icon: Icons.phone_android_outlined,
-                  githubUrl:
-                      'https://github.com/uk03499314094-lang',
-                ),
-
-                const SizedBox(height: 20),
-
-                _ProjectCard(
-                  number: '04',
-                  title: 'AI Automation',
-                  category: 'AI / AUTOMATION',
-                  description:
-                      'Automation workflows combining AI, APIs and business processes to reduce repetitive tasks and improve productivity.',
-                  technologies: [
-                    'Python',
-                    'n8n',
-                    'AI',
-                    'APIs',
-                  ],
-                  icon: Icons.auto_awesome_outlined,
-                  githubUrl:
-                      'https://github.com/uk03499314094-lang',
-                ),
-              ],
-            )
-          else
-            Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: _ProjectCard(
-                        number: '01',
-                        title: 'Emotion Detection AI',
-                        category: 'AI / MACHINE LEARNING',
-                        description:
-                            'An AI-powered emotion classification system built to recognize human emotions using computer vision and deep learning.',
-                        technologies: [
-                          'Python',
-                          'TensorFlow',
-                          'CNN',
-                          'OpenCV',
-                        ],
-                        icon: Icons.psychology_outlined,
-                        featured: true,
-                        githubUrl:
-                            'https://github.com/uk03499314094-lang/task-2',
+          _buildHeading(context, width),
+          const SizedBox(height: 32),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final cardWidth = (constraints.maxWidth - (columns - 1) * 22) / columns;
+              return Wrap(
+                spacing: 22,
+                runSpacing: 22,
+                children: _projects
+                    .map(
+                      (project) => SizedBox(
+                        width: cardWidth,
+                        child: _ProjectCard(project: project),
                       ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    Expanded(
-                      flex: 2,
-                      child: _ProjectCard(
-                        number: '02',
-                        title: 'MERN Web Application',
-                        category: 'FULL-STACK DEVELOPMENT',
-                        description:
-                            'A modern full-stack web application using React, Node.js, Express and MongoDB.',
-                        technologies: [
-                          'React',
-                          'Node.js',
-                          'Express',
-                          'MongoDB',
-                        ],
-                        icon: Icons.language_outlined,
-                        githubUrl:
-                            'https://github.com/uk03499314094-lang',
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _ProjectCard(
-                        number: '03',
-                        title: 'Flutter Portfolio',
-                        category: 'FLUTTER / WEB',
-                        description:
-                            'A responsive personal developer portfolio built with Flutter featuring modern UI, animations and dark/light themes.',
-                        technologies: [
-                          'Flutter',
-                          'Dart',
-                          'Material 3',
-                          'Web',
-                        ],
-                        icon: Icons.phone_android_outlined,
-                        githubUrl:
-                            'https://github.com/uk03499314094-lang',
-                      ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    Expanded(
-                      child: _ProjectCard(
-                        number: '04',
-                        title: 'AI Automation',
-                        category: 'AI / AUTOMATION',
-                        description:
-                            'Automation workflows combining AI, APIs and business processes to reduce repetitive tasks.',
-                        technologies: [
-                          'Python',
-                          'n8n',
-                          'AI',
-                          'APIs',
-                        ],
-                        icon: Icons.auto_awesome_outlined,
-                        githubUrl:
-                            'https://github.com/uk03499314094-lang',
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
+                    )
+                    .toList(),
+              );
+            },
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildHeading(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+  Widget _buildHeading(BuildContext context, double width) {
+    final theme = Theme.of(context);
+    final primary = theme.colorScheme.primary;
+    final isMobile = width < 600;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -214,55 +98,55 @@ class ProjectsSection extends StatelessWidget {
         Row(
           children: [
             Container(
-              width: 35,
+              width: 32,
               height: 2,
-              color: primary,
+              decoration: BoxDecoration(
+                color: primary,
+                borderRadius: BorderRadius.circular(2),
+              ),
             ),
             const SizedBox(width: 10),
             Text(
               'SELECTED WORK',
               style: TextStyle(
                 color: primary,
-                fontSize: 11,
-                fontWeight: FontWeight.w800,
+                fontSize: 10,
+                fontWeight: FontWeight.w900,
                 letterSpacing: 2,
               ),
             ),
           ],
         ),
-
         const SizedBox(height: 12),
-
         Text(
           'Featured Projects',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w900,
-                letterSpacing: -1,
-              ),
+          style: theme.textTheme.headlineMedium?.copyWith(
+            fontSize: isMobile ? 29 : 36,
+            fontWeight: FontWeight.w900,
+            letterSpacing: -1.1,
+          ),
         ),
-
         const SizedBox(height: 8),
-
         Text(
           'A selection of projects built with modern technologies.',
-          style: Theme.of(context).textTheme.bodyMedium,
+          style: theme.textTheme.bodyMedium?.copyWith(height: 1.6),
         ),
       ],
     );
   }
 }
 
-class _ProjectCard extends StatefulWidget {
+class _ProjectInfo {
   final String number;
   final String title;
   final String category;
   final String description;
   final List<String> technologies;
   final IconData icon;
-  final bool featured;
   final String githubUrl;
+  final bool featured;
 
-  const _ProjectCard({
+  const _ProjectInfo({
     required this.number,
     required this.title,
     required this.category,
@@ -272,6 +156,12 @@ class _ProjectCard extends StatefulWidget {
     required this.githubUrl,
     this.featured = false,
   });
+}
+
+class _ProjectCard extends StatefulWidget {
+  final _ProjectInfo project;
+
+  const _ProjectCard({required this.project});
 
   @override
   State<_ProjectCard> createState() => _ProjectCardState();
@@ -279,311 +169,274 @@ class _ProjectCard extends StatefulWidget {
 
 class _ProjectCardState extends State<_ProjectCard> {
   bool _hovered = false;
+  double _tiltX = 0;
+  double _tiltY = 0;
 
   Future<void> _openGithub() async {
-    final uri = Uri.parse(widget.githubUrl);
-
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(
-        uri,
-        webOnlyWindowName: '_blank',
+    final uri = Uri.parse(widget.project.githubUrl);
+    try {
+      final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
+      if (!opened && mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Could not open the GitHub link.')),
+        );
+      }
+    } catch (_) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Could not open the GitHub link.')),
       );
     }
+  }
+
+  void _updateTilt(PointerEvent event, BoxConstraints constraints) {
+    if (constraints.maxWidth <= 0 || constraints.maxHeight <= 0) return;
+    final x = (event.localPosition.dx / constraints.maxWidth) * 2 - 1;
+    final y = (event.localPosition.dy / constraints.maxHeight) * 2 - 1;
+    setState(() {
+      _tiltY = x.clamp(-1.0, 1.0) * 0.035;
+      _tiltX = -y.clamp(-1.0, 1.0) * 0.035;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final primary = theme.colorScheme.primary;
+    final project = widget.project;
+    final isDark = theme.brightness == Brightness.dark;
 
-    return MouseRegion(
-      cursor: SystemMouseCursors.click,
-
-      onEnter: (_) {
-        setState(() {
-          _hovered = true;
-        });
-      },
-
-      onExit: (_) {
-        setState(() {
-          _hovered = false;
-        });
-      },
-
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 280),
-
-        width: double.infinity,
-
-        transform: Matrix4.identity()
-          ..translate(
-            0.0,
-            _hovered ? -7.0 : 0.0,
-          ),
-
-        decoration: BoxDecoration(
-          color: const Color(0xFF0B1118),
-
-          borderRadius: BorderRadius.circular(20),
-
-          border: Border.all(
-            color: _hovered
-                ? primary.withValues(alpha: 0.60)
-                : const Color(0xFF202B36),
-          ),
-
-          boxShadow: _hovered
-              ? [
-                  BoxShadow(
-                    color: primary.withValues(alpha: 0.13),
-                    blurRadius: 40,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.15),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
-        ),
-
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _buildProjectVisual(primary),
-
-            Padding(
-              padding: const EdgeInsets.all(25),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return MouseRegion(
+          cursor: SystemMouseCursors.click,
+          onEnter: (_) => setState(() => _hovered = true),
+          onExit: (_) => setState(() {
+            _hovered = false;
+            _tiltX = 0;
+            _tiltY = 0;
+          }),
+          onHover: (event) => _updateTilt(event, constraints),
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 260),
+            curve: Curves.easeOutCubic,
+            transformAlignment: Alignment.center,
+            transform: Matrix4.identity()
+              ..setEntry(3, 2, 0.0012)
+              ..rotateX(_hovered ? _tiltX : 0)
+              ..rotateY(_hovered ? _tiltY : 0)
+              ..translate(0.0, _hovered ? -5.0 : 0.0),
+            decoration: BoxDecoration(
+              color: isDark ? const Color(0xFF0B1118) : theme.cardColor,
+              borderRadius: BorderRadius.circular(22),
+              border: Border.all(
+                color: _hovered
+                    ? primary.withValues(alpha: .65)
+                    : (isDark ? const Color(0xFF26313D) : theme.dividerColor),
+              ),
+              boxShadow: [
+                BoxShadow(
+                  color: _hovered
+                      ? primary.withValues(alpha: .15)
+                      : Colors.black.withValues(alpha: isDark ? .14 : .045),
+                  blurRadius: _hovered ? 32 : 17,
+                  offset: Offset(0, _hovered ? 14 : 7),
+                ),
+              ],
+            ),
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(21),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        widget.category,
-                        style: TextStyle(
-                          color: primary,
-                          fontSize: 9,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.5,
-                        ),
-                      ),
-
-                      Text(
-                        widget.number,
-                        style: TextStyle(
-                          color: primary.withValues(alpha: 0.4),
-                          fontSize: 22,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 10),
-
-                  Text(
-                    widget.title,
-                    style: const TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.w900,
-                      letterSpacing: -0.5,
+                  _buildProjectVisual(primary, isDark),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(
+                      constraints.maxWidth < 380 ? 16 : 22,
+                      21,
+                      constraints.maxWidth < 380 ? 16 : 22,
+                      20,
                     ),
-                  ),
-
-                  const SizedBox(height: 11),
-
-                  Text(
-                    widget.description,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color: const Color(0xFF9AA6B2),
-                      height: 1.65,
-                    ),
-                  ),
-
-                  const SizedBox(height: 18),
-
-                  Wrap(
-                    spacing: 7,
-                    runSpacing: 7,
-                    children: widget.technologies
-                        .map(
-                          (tech) => _TechChip(
-                            text: tech,
-                            primary: primary,
-                          ),
-                        )
-                        .toList(),
-                  ),
-
-                  const SizedBox(height: 22),
-
-                  Row(
-                    mainAxisAlignment:
-                        MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton.icon(
-                        onPressed: _openGithub,
-                        style: TextButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 0,
-                            vertical: 8,
-                          ),
-                          foregroundColor: primary,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                project.category,
+                                style: TextStyle(
+                                  color: primary,
+                                  fontSize: 9,
+                                  fontWeight: FontWeight.w900,
+                                  letterSpacing: 1.15,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 8),
+                            Text(
+                              project.number,
+                              style: TextStyle(
+                                color: primary.withValues(alpha: .55),
+                                fontSize: 19,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
+                          ],
                         ),
-                        icon: const Icon(
-                          Icons.code_rounded,
-                          size: 17,
-                        ),
-                        label: const Text(
-                          'VIEW GITHUB',
-                          style: TextStyle(
-                            fontSize: 10,
+                        const SizedBox(height: 9),
+                        Text(
+                          project.title,
+                          style: theme.textTheme.titleLarge?.copyWith(
+                            fontSize: 21,
+                            color: isDark ? Colors.white : theme.colorScheme.onSurface,
                             fontWeight: FontWeight.w900,
-                            letterSpacing: 1,
+                            letterSpacing: -.4,
                           ),
                         ),
-                      ),
-
-                      AnimatedContainer(
-                        duration:
-                            const Duration(milliseconds: 250),
-                        transform: Matrix4.identity()
-                          ..translate(
-                            _hovered ? 5.0 : 0.0,
-                            0.0,
+                        const SizedBox(height: 10),
+                        Text(
+                          project.description,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: isDark
+                                ? const Color(0xFF9AA6B2)
+                                : theme.colorScheme.onSurfaceVariant,
+                            height: 1.65,
                           ),
-                        child: Icon(
-                          Icons.arrow_forward_rounded,
-                          color: primary,
-                          size: 18,
                         ),
-                      ),
-                    ],
+                        const SizedBox(height: 17),
+                        Wrap(
+                          spacing: 7,
+                          runSpacing: 7,
+                          children: project.technologies
+                              .map((tech) => _TechChip(text: tech, primary: primary))
+                              .toList(),
+                        ),
+                        const SizedBox(height: 17),
+                        Row(
+                          children: [
+                            Flexible(
+                              child: TextButton.icon(
+                                onPressed: _openGithub,
+                                style: TextButton.styleFrom(
+                                  foregroundColor: primary,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 0,
+                                    vertical: 8,
+                                  ),
+                                ),
+                                icon: const Icon(Icons.code_rounded, size: 17),
+                                label: const Text(
+                                  'VIEW GITHUB',
+                                  style: TextStyle(
+                                    fontSize: 10,
+                                    fontWeight: FontWeight.w900,
+                                    letterSpacing: .8,
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const Spacer(),
+                            AnimatedSlide(
+                              duration: const Duration(milliseconds: 220),
+                              offset: _hovered ? const Offset(.15, 0) : Offset.zero,
+                              child: Icon(Icons.arrow_forward_rounded, color: primary, size: 19),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
-      ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildProjectVisual(Color primary) {
+  Widget _buildProjectVisual(Color primary, bool isDark) {
+    final project = widget.project;
+
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 300),
-
-      height: widget.featured ? 230 : 190,
-
+      duration: const Duration(milliseconds: 250),
+      height: project.featured ? 195 : 168,
       width: double.infinity,
-
       decoration: BoxDecoration(
-        color: const Color(0xFF070B10),
-
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(20),
-          topRight: Radius.circular(20),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: isDark
+              ? const [Color(0xFF101A25), Color(0xFF080D13)]
+              : const [Color(0xFFF4F7FA), Color(0xFFE9EEF4)],
         ),
-
-        border: Border(
-          bottom: BorderSide(
-            color: primary.withValues(
-              alpha: _hovered ? 0.25 : 0.10,
-            ),
-          ),
-        ),
+        border: Border(bottom: BorderSide(color: primary.withValues(alpha: .18))),
       ),
-
       child: Stack(
+        clipBehavior: Clip.hardEdge,
         children: [
           Positioned(
-            top: -60,
-            right: -40,
+            top: -65,
+            right: -35,
             child: AnimatedContainer(
-              duration: const Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 300),
               width: _hovered ? 220 : 190,
               height: _hovered ? 220 : 190,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
                 border: Border.all(
-                  color: primary.withValues(alpha: 0.08),
+                  color: primary.withValues(alpha: _hovered ? .17 : .08),
                   width: 2,
                 ),
               ),
             ),
           ),
-
           Positioned(
-            bottom: -70,
-            left: -50,
+            bottom: -80,
+            left: -45,
             child: Container(
-              width: 180,
-              height: 180,
+              width: 190,
+              height: 190,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(
-                  color: primary.withValues(alpha: 0.05),
-                  width: 2,
-                ),
+                border: Border.all(color: primary.withValues(alpha: .07), width: 2),
               ),
             ),
           ),
-
           Center(
             child: AnimatedScale(
-              duration: const Duration(milliseconds: 300),
-              scale: _hovered ? 1.12 : 1.0,
-
+              duration: const Duration(milliseconds: 250),
+              scale: _hovered ? 1.1 : 1,
               child: Container(
-                width: 95,
-                height: 95,
-
+                width: 94,
+                height: 94,
                 decoration: BoxDecoration(
-                  color: primary.withValues(alpha: 0.07),
+                  color: primary.withValues(alpha: .08),
                   shape: BoxShape.circle,
-
-                  border: Border.all(
-                    color: primary.withValues(alpha: 0.25),
-                  ),
-
+                  border: Border.all(color: primary.withValues(alpha: .38), width: 1.4),
                   boxShadow: [
                     BoxShadow(
-                      color: primary.withValues(alpha: 0.10),
-                      blurRadius: 35,
+                      color: primary.withValues(alpha: _hovered ? .19 : .07),
+                      blurRadius: _hovered ? 38 : 25,
+                      spreadRadius: 2,
                     ),
                   ],
                 ),
-
-                child: Icon(
-                  widget.icon,
-                  color: primary,
-                  size: 45,
-                ),
+                child: Icon(project.icon, color: primary, size: 43),
               ),
             ),
           ),
-
           Positioned(
-            top: 18,
-            left: 20,
+            top: 17,
+            left: 18,
             child: Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 9,
-                vertical: 6,
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
               decoration: BoxDecoration(
-                color: Colors.black.withValues(alpha: 0.35),
+                color: Colors.black.withValues(alpha: .35),
                 borderRadius: BorderRadius.circular(7),
-                border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.08),
-                ),
+                border: Border.all(color: Colors.white.withValues(alpha: .1)),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -591,10 +444,7 @@ class _ProjectCardState extends State<_ProjectCard> {
                   Container(
                     width: 6,
                     height: 6,
-                    decoration: BoxDecoration(
-                      color: primary,
-                      shape: BoxShape.circle,
-                    ),
+                    decoration: BoxDecoration(color: primary, shape: BoxShape.circle),
                   ),
                   const SizedBox(width: 6),
                   const Text(
@@ -620,34 +470,20 @@ class _TechChip extends StatelessWidget {
   final String text;
   final Color primary;
 
-  const _TechChip({
-    required this.text,
-    required this.primary,
-  });
+  const _TechChip({required this.text, required this.primary});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 9,
-        vertical: 6,
-      ),
-
+      padding: const EdgeInsets.symmetric(horizontal: 9, vertical: 6),
       decoration: BoxDecoration(
-        color: primary.withValues(alpha: 0.06),
+        color: primary.withValues(alpha: .07),
         borderRadius: BorderRadius.circular(7),
-        border: Border.all(
-          color: primary.withValues(alpha: 0.12),
-        ),
+        border: Border.all(color: primary.withValues(alpha: .18)),
       ),
-
       child: Text(
         text,
-        style: TextStyle(
-          color: primary,
-          fontSize: 9,
-          fontWeight: FontWeight.w700,
-        ),
+        style: TextStyle(color: primary, fontSize: 9, fontWeight: FontWeight.w700),
       ),
     );
   }

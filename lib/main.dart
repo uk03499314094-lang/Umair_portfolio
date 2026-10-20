@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 import 'core/theme/app_theme.dart';
@@ -18,11 +19,12 @@ class UmairPortfolioApp extends StatefulWidget {
   const UmairPortfolioApp({super.key});
 
   @override
-  State<UmairPortfolioApp> createState() => _UmairPortfolioAppState();
+  State<UmairPortfolioApp> createState() =>
+      _UmairPortfolioAppState();
 }
 
 class _UmairPortfolioAppState extends State<UmairPortfolioApp> {
-  ThemeMode _themeMode = ThemeMode.light;
+  ThemeMode _themeMode = ThemeMode.dark;
 
   void _toggleTheme() {
     setState(() {
@@ -56,7 +58,8 @@ class PortfolioHomePage extends StatefulWidget {
   });
 
   @override
-  State<PortfolioHomePage> createState() => _PortfolioHomePageState();
+  State<PortfolioHomePage> createState() =>
+      _PortfolioHomePageState();
 }
 
 class _PortfolioHomePageState extends State<PortfolioHomePage> {
@@ -69,15 +72,26 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
   final GlobalKey contactKey = GlobalKey();
 
   void _scrollToSection(GlobalKey key) {
-    final context = key.currentContext;
+    final sectionContext = key.currentContext;
 
-    if (context != null) {
-      Scrollable.ensureVisible(
-        context,
-        duration: const Duration(milliseconds: 700),
-        curve: Curves.easeInOut,
-      );
-    }
+    if (sectionContext == null) return;
+
+    Scrollable.ensureVisible(
+      sectionContext,
+      duration: const Duration(milliseconds: 700),
+      curve: Curves.easeInOutCubic,
+      alignment: 0,
+    );
+  }
+
+  void _scrollToTop() {
+    if (!_scrollController.hasClients) return;
+
+    _scrollController.animateTo(
+      0,
+      duration: const Duration(milliseconds: 700),
+      curve: Curves.easeInOutCubic,
+    );
   }
 
   @override
@@ -99,50 +113,40 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
             onContactTap: () => _scrollToSection(contactKey),
             onThemeToggle: widget.onThemeToggle,
           ),
-
           Expanded(
             child: SingleChildScrollView(
               controller: _scrollController,
               child: Column(
                 children: [
-                  // Hero Section
                   HeroSection(
-                    onProjectsTap: () => _scrollToSection(projectsKey),
-                    onContactTap: () => _scrollToSection(contactKey),
+                    onProjectsTap: () =>
+                        _scrollToSection(projectsKey),
+                    onContactTap: () =>
+                        _scrollToSection(contactKey),
                   ),
-
-                  // About Section
                   Container(
                     key: aboutKey,
                     child: const AboutSection(),
                   ),
-
-                  // Skills Section
                   Container(
                     key: skillsKey,
                     child: const SkillsSection(),
                   ),
-
-                  // Projects Section
                   Container(
                     key: projectsKey,
                     child: const ProjectsSection(),
                   ),
-
-                  // Services Section
                   Container(
                     key: servicesKey,
                     child: const ServicesSection(),
                   ),
-
-                  // Contact Section
                   Container(
                     key: contactKey,
                     child: const ContactSection(),
                   ),
-
-                  // Footer
-                  const PortfolioFooter(),
+                  PortfolioFooter(
+                    onBackToTop: _scrollToTop,
+                  ),
                 ],
               ),
             ),

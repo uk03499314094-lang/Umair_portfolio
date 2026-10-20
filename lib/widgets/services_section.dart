@@ -1,233 +1,191 @@
+
 import 'package:flutter/material.dart';
 
 class ServicesSection extends StatelessWidget {
   const ServicesSection({super.key});
 
+  static const List<_ServiceInfo> _services = [
+    _ServiceInfo(
+      number: '01',
+      title: 'Web Development',
+      description:
+          'Modern, responsive and professional websites built for performance, accessibility and an excellent user experience.',
+      icon: Icons.language_rounded,
+      technologies: ['React', 'JavaScript', 'Tailwind CSS'],
+    ),
+    _ServiceInfo(
+      number: '02',
+      title: 'Flutter Development',
+      description:
+          'Cross-platform mobile and web applications with clean interfaces, responsive layouts and smooth interactions.',
+      icon: Icons.phone_android_rounded,
+      technologies: ['Flutter', 'Dart', 'Material 3'],
+    ),
+    _ServiceInfo(
+      number: '03',
+      title: 'AI & Machine Learning',
+      description:
+          'Intelligent solutions using machine learning, computer vision and AI-powered applications to solve real problems.',
+      icon: Icons.psychology_alt_rounded,
+      technologies: ['Python', 'TensorFlow', 'OpenCV'],
+    ),
+    _ServiceInfo(
+      number: '04',
+      title: 'AI Automation',
+      description:
+          'Automated workflows that connect AI tools, APIs and business processes to reduce repetitive manual work.',
+      icon: Icons.auto_awesome_rounded,
+      technologies: ['Python', 'n8n', 'APIs'],
+    ),
+    _ServiceInfo(
+      number: '05',
+      title: 'Backend & APIs',
+      description:
+          'Backend functionality and API integrations designed to connect applications, manage data and support business logic.',
+      icon: Icons.storage_rounded,
+      technologies: ['Node.js', 'Express', 'REST APIs'],
+    ),
+    
+_ServiceInfo(
+  number: '06',
+  title: 'Database Solutions',
+  description:
+      'Structured data storage and database integration for reliable, maintainable and scalable applications.',
+  icon: Icons.storage_rounded,
+  technologies: ['MongoDB', 'SQL', 'Firebase'],
+),
+
+_ServiceInfo(
+  number: '06',
+  title: 'Database Solutions',
+  description:
+      'Structured data storage and database integration for reliable, maintainable and scalable applications.',
+  icon: Icons.storage_rounded,
+  technologies: ['MongoDB', 'SQL', 'Firebase'],
+),
+
+  ];
+
   @override
   Widget build(BuildContext context) {
-    final width = MediaQuery.of(context).size.width;
-    final isMobile = width < 850;
+    final theme = Theme.of(context);
+    final width = MediaQuery.sizeOf(context).width;
+    final isMobile = width < 600;
+    final primary = theme.colorScheme.primary;
+    final isDark = theme.brightness == Brightness.dark;
 
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
-        horizontal: isMobile ? 20 : 60,
-        vertical: 90,
+        horizontal: isMobile ? 18 : (width < 1000 ? 34 : 60),
+        vertical: isMobile ? 64 : 88,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildHeading(context),
-
-          const SizedBox(height: 45),
-
-          if (isMobile)
-            Column(
-              children: [
-                _ServiceCard(
-                  number: '01',
-                  icon: Icons.web_outlined,
-                  title: 'Web Development',
-                  description:
-                      'Modern, responsive websites and web applications built with clean architecture and excellent user experience.',
-                  technologies: 'React • JavaScript • Tailwind',
-                  featured: true,
+          Row(
+            children: [
+              Container(
+                width: 32,
+                height: 3,
+                decoration: BoxDecoration(
+                  color: primary,
+                  borderRadius: BorderRadius.circular(3),
                 ),
-
-                const SizedBox(height: 16),
-
-                _ServiceCard(
-                  number: '02',
-                  icon: Icons.phone_android_outlined,
-                  title: 'Flutter Development',
-                  description:
-                      'Cross-platform mobile and web applications using Flutter and Dart with modern Material 3 interfaces.',
-                  technologies: 'Flutter • Dart • Material 3',
+              ),
+              const SizedBox(width: 10),
+              Text(
+                'WHAT I DO',
+                style: TextStyle(
+                  color: primary,
+                  fontSize: 10,
+                  fontWeight: FontWeight.w900,
+                  letterSpacing: 2,
                 ),
-
-                const SizedBox(height: 16),
-
-                _ServiceCard(
-                  number: '03',
-                  icon: Icons.auto_awesome_outlined,
-                  title: 'AI & Automation',
-                  description:
-                      'AI-powered applications and automation workflows that connect tools, APIs and business processes.',
-                  technologies: 'Python • AI • n8n',
-                ),
-
-                const SizedBox(height: 16),
-
-                _ServiceCard(
-                  number: '04',
-                  icon: Icons.dns_outlined,
-                  title: 'Backend & APIs',
-                  description:
-                      'Scalable backend systems, REST APIs, authentication and database integration for modern applications.',
-                  technologies: 'Node.js • Express • REST',
-                ),
-
-                const SizedBox(height: 16),
-
-                _ServiceCard(
-                  number: '05',
-                  icon: Icons.storage_outlined,
-                  title: 'Database Solutions',
-                  description:
-                      'Reliable data management and database integration for secure and scalable digital applications.',
-                  technologies: 'MongoDB • MySQL',
-                ),
-              ],
-            )
-          else
-            Column(
-              children: [
-                // FIRST ROW
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      flex: 3,
-                      child: _ServiceCard(
-                        number: '01',
-                        icon: Icons.web_outlined,
-                        title: 'Web Development',
-                        description:
-                            'Modern, responsive websites and web applications built with clean architecture and excellent user experience.',
-                        technologies: 'React • JavaScript • Tailwind',
-                        featured: true,
-                      ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    Expanded(
-                      flex: 2,
-                      child: _ServiceCard(
-                        number: '02',
-                        icon: Icons.phone_android_outlined,
-                        title: 'Flutter Development',
-                        description:
-                            'Cross-platform applications using Flutter and Dart with beautiful responsive interfaces.',
-                        technologies: 'Flutter • Dart • Material 3',
-                      ),
-                    ),
-                  ],
-                ),
-
-                const SizedBox(height: 20),
-
-                // SECOND ROW
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: _ServiceCard(
-                        number: '03',
-                        icon: Icons.auto_awesome_outlined,
-                        title: 'AI & Automation',
-                        description:
-                            'AI-powered applications and automation workflows connecting tools, APIs and business processes.',
-                        technologies: 'Python • AI • n8n',
-                      ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    Expanded(
-                      child: _ServiceCard(
-                        number: '04',
-                        icon: Icons.dns_outlined,
-                        title: 'Backend & APIs',
-                        description:
-                            'Scalable backend systems, REST APIs, authentication and database integration.',
-                        technologies: 'Node.js • Express • REST',
-                      ),
-                    ),
-
-                    const SizedBox(width: 20),
-
-                    Expanded(
-                      child: _ServiceCard(
-                        number: '05',
-                        icon: Icons.storage_outlined,
-                        title: 'Database Solutions',
-                        description:
-                            'Reliable data management and database integration for modern applications.',
-                        technologies: 'MongoDB • MySQL',
-                      ),
-                    ),
-                  ],
-                ),
-              ],
+              ),
+            ],
+          ),
+          const SizedBox(height: 14),
+          Text(
+            'Services & Expertise',
+            style: theme.textTheme.headlineMedium?.copyWith(
+              fontSize: isMobile ? 29 : 38,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -1,
             ),
+          ),
+          const SizedBox(height: 10),
+          ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 600),
+            child: Text(
+              'Building digital experiences and intelligent solutions '
+              'with modern technologies.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                height: 1.7,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          const SizedBox(height: 34),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final columns = constraints.maxWidth >= 1050
+                  ? 3
+                  : constraints.maxWidth >= 650
+                      ? 2
+                      : 1;
+              const spacing = 20.0;
+              final cardWidth =
+                  (constraints.maxWidth - spacing * (columns - 1)) /
+                      columns;
+
+              return Wrap(
+                spacing: spacing,
+                runSpacing: spacing,
+                children: _services.map((service) {
+                  return SizedBox(
+                    width: cardWidth,
+                    child: _ServiceCard(
+                      service: service,
+                      primary: primary,
+                      isDark: isDark,
+                    ),
+                  );
+                }).toList(),
+              );
+            },
+          ),
         ],
       ),
     );
   }
+}
 
-  Widget _buildHeading(BuildContext context) {
-    final primary = Theme.of(context).colorScheme.primary;
+class _ServiceInfo {
+  final String number;
+  final String title;
+  final String description;
+  final IconData icon;
+  final List<String> technologies;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          children: [
-            Container(
-              width: 35,
-              height: 2,
-              color: primary,
-            ),
-            const SizedBox(width: 10),
-            Text(
-              'WHAT I DO',
-              style: TextStyle(
-                color: primary,
-                fontSize: 11,
-                fontWeight: FontWeight.w800,
-                letterSpacing: 2,
-              ),
-            ),
-          ],
-        ),
-
-        const SizedBox(height: 12),
-
-        Text(
-          'Services I Provide',
-          style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.8,
-              ),
-        ),
-
-        const SizedBox(height: 8),
-
-        Text(
-          'Digital solutions designed to turn ideas into useful products.',
-          style: Theme.of(context).textTheme.bodyMedium,
-        ),
-      ],
-    );
-  }
+  const _ServiceInfo({
+    required this.number,
+    required this.title,
+    required this.description,
+    required this.icon,
+    required this.technologies,
+  });
 }
 
 class _ServiceCard extends StatefulWidget {
-  final String number;
-  final IconData icon;
-  final String title;
-  final String description;
-  final String technologies;
-  final bool featured;
+  final _ServiceInfo service;
+  final Color primary;
+  final bool isDark;
 
   const _ServiceCard({
-    required this.number,
-    required this.icon,
-    required this.title,
-    required this.description,
-    required this.technologies,
-    this.featured = false,
+    required this.service,
+    required this.primary,
+    required this.isDark,
   });
 
   @override
@@ -239,234 +197,127 @@ class _ServiceCardState extends State<_ServiceCard> {
 
   @override
   Widget build(BuildContext context) {
+    final service = widget.service;
+    final primary = widget.primary;
     final theme = Theme.of(context);
-    final primary = theme.colorScheme.primary;
 
     return MouseRegion(
-      cursor: SystemMouseCursors.click,
-
-      onEnter: (_) {
-        setState(() {
-          _hovered = true;
-        });
-      },
-
-      onExit: (_) {
-        setState(() {
-          _hovered = false;
-        });
-      },
-
+      onEnter: (_) => setState(() => _hovered = true),
+      onExit: (_) => setState(() => _hovered = false),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
-
-        width: double.infinity,
-
-        transform: Matrix4.identity()
-          ..translate(
-            0.0,
-            _hovered ? -6.0 : 0.0,
-          ),
-
-        padding: const EdgeInsets.all(26),
-
+        curve: Curves.easeOutCubic,
+        transform: Matrix4.translationValues(
+          0,
+          _hovered ? -6 : 0,
+          0,
+        ),
+        padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: const Color(0xFF0B1118),
-
-          borderRadius: BorderRadius.circular(18),
-
+          color: widget.isDark
+              ? const Color(0xFF0B1118)
+              : theme.cardColor,
+          borderRadius: BorderRadius.circular(20),
           border: Border.all(
             color: _hovered
-                ? primary.withValues(alpha: 0.55)
-                : const Color(0xFF202B36),
-            width: 1,
+                ? primary.withValues(alpha: 0.7)
+                : theme.dividerColor.withValues(alpha: 0.65),
           ),
-
-          boxShadow: _hovered
-              ? [
-                  BoxShadow(
-                    color: primary.withValues(alpha: 0.12),
-                    blurRadius: 35,
-                    spreadRadius: 1,
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.12),
-                    blurRadius: 20,
-                    offset: const Offset(0, 8),
-                  ),
-                ],
+          boxShadow: [
+            BoxShadow(
+              color: _hovered
+                  ? primary.withValues(alpha: 0.12)
+                  : Colors.black.withValues(
+                      alpha: widget.isDark ? 0.12 : 0.035,
+                    ),
+              blurRadius: _hovered ? 28 : 16,
+              offset: Offset(0, _hovered ? 12 : 6),
+            ),
+          ],
         ),
-
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // TOP
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 AnimatedContainer(
-                  duration: const Duration(milliseconds: 250),
-
-                  width: 52,
-                  height: 52,
-
+                  duration: const Duration(milliseconds: 220),
+                  width: 54,
+                  height: 54,
                   decoration: BoxDecoration(
-                    color: _hovered
-                        ? primary.withValues(alpha: 0.16)
-                        : primary.withValues(alpha: 0.08),
-
-                    borderRadius: BorderRadius.circular(13),
-
+                    color: primary.withValues(
+                      alpha: _hovered ? 0.18 : 0.09,
+                    ),
+                    borderRadius: BorderRadius.circular(15),
                     border: Border.all(
-                      color: primary.withValues(
-                        alpha: _hovered ? 0.35 : 0.15,
-                      ),
+                      color: primary.withValues(alpha: 0.25),
                     ),
                   ),
-
-                  child: AnimatedScale(
-                    duration: const Duration(milliseconds: 250),
-                    scale: _hovered ? 1.12 : 1.0,
-                    child: Icon(
-                      widget.icon,
-                      color: primary,
-                      size: 24,
-                    ),
+                  child: Icon(
+                    service.icon,
+                    color: primary,
+                    size: 27,
                   ),
                 ),
-
                 Text(
-                  widget.number,
+                  service.number,
                   style: TextStyle(
-                    color: primary.withValues(
-                      alpha: _hovered ? 0.75 : 0.40,
-                    ),
-                    fontSize: 25,
+                    color: primary.withValues(alpha: 0.65),
+                    fontSize: 22,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
               ],
             ),
-
-            const SizedBox(height: 34),
-
-            // TITLE
+            const SizedBox(height: 25),
             Text(
-              widget.title,
-              style: const TextStyle(
-                color: Colors.white,
+              service.title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w800,
                 fontSize: 20,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -0.3,
               ),
             ),
-
-            const SizedBox(height: 11),
-
-            // DESCRIPTION
+            const SizedBox(height: 12),
             Text(
-              widget.description,
+              service.description,
               style: theme.textTheme.bodyMedium?.copyWith(
-                color: const Color(0xFF9AA6B2),
-                height: 1.65,
+                height: 1.7,
+                color: theme.colorScheme.onSurfaceVariant,
               ),
             ),
-
             const SizedBox(height: 20),
-
-            // TECHNOLOGIES
-            Container(
-              padding: const EdgeInsets.symmetric(
-                horizontal: 10,
-                vertical: 7,
-              ),
-
-              decoration: BoxDecoration(
-                color: primary.withValues(alpha: 0.05),
-                borderRadius: BorderRadius.circular(7),
-                border: Border.all(
-                  color: primary.withValues(alpha: 0.10),
-                ),
-              ),
-
-              child: Text(
-                widget.technologies,
-                style: TextStyle(
-                  color: primary,
-                  fontSize: 10,
-                  fontWeight: FontWeight.w800,
-                  letterSpacing: 0.4,
-                ),
-              ),
+            Divider(
+              color: theme.dividerColor.withValues(alpha: 0.65),
+              height: 1,
             ),
-
-            const SizedBox(height: 20),
-
-            // BOTTOM LINE
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                AnimatedOpacity(
-                  duration: const Duration(milliseconds: 200),
-                  opacity: _hovered ? 1 : 0.55,
-
-                  child: Row(
-                    children: [
-                      Text(
-                        'EXPLORE',
-                        style: TextStyle(
-                          color: primary,
-                          fontSize: 9,
-                          fontWeight: FontWeight.w900,
-                          letterSpacing: 1.2,
-                        ),
-                      ),
-
-                      const SizedBox(width: 8),
-
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 250),
-
-                        transform: Matrix4.identity()
-                          ..translate(
-                            _hovered ? 5.0 : 0.0,
-                            0.0,
-                          ),
-
-                        child: Icon(
-                          Icons.arrow_forward_rounded,
-                          size: 16,
-                          color: primary,
-                        ),
-                      ),
-                    ],
+            const SizedBox(height: 16),
+            Wrap(
+              spacing: 7,
+              runSpacing: 7,
+              children: service.technologies.map((technology) {
+                return Container(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 9,
+                    vertical: 7,
                   ),
-                ),
-
-                if (widget.featured)
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 9,
-                      vertical: 5,
-                    ),
-                    decoration: BoxDecoration(
-                      color: primary.withValues(alpha: 0.10),
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Text(
-                      'FEATURED',
-                      style: TextStyle(
-                        color: primary,
-                        fontSize: 8,
-                        fontWeight: FontWeight.w900,
-                        letterSpacing: 1,
-                      ),
+                  decoration: BoxDecoration(
+                    color: primary.withValues(alpha: 0.07),
+                    borderRadius: BorderRadius.circular(7),
+                    border: Border.all(
+                      color: primary.withValues(alpha: 0.18),
                     ),
                   ),
-              ],
+                  child: Text(
+                    technology,
+                    style: TextStyle(
+                      color: primary,
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                );
+              }).toList(),
             ),
           ],
         ),
